@@ -1,0 +1,162 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+	<Button name="QuickActionButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				local name = self:GetName()
+				self.slot = tonumber(name:reverse():sub(1,1))
+				
+				if name:sub(5,5) == "M" then
+					self.tag = "Mount"
+				elseif name:sub(5,5) == "P" then
+					self.tag = "Pet"
+				elseif name:sub(5,5) == "T" then
+					self.tag = "Toy"
+				elseif name:sub(5,5) == "B" then
+					self.tag = "Bag"
+				end
+				
+				self:RegisterEvent("UPDATE_BINDINGS");
+				self:RegisterEvent("PLAYER_ENTERING_WORLD");
+				self:RegisterEvent("CVAR_UPDATE");
+
+				if GetCVarBool("ActionButtonUseKeyDown") == true then
+					self:RegisterForClicks("RightButtonDown");				
+				else
+					self:RegisterForClicks("RightButtonUp");				
+				end				
+			</OnLoad>
+			<OnMouseUp>
+				QuickActionsButton_PreClick(self, button, false, false)
+			</OnMouseUp>
+			<OnMouseDown>
+				QuickActionsButton_PreClick(self, button, true, false)
+			</OnMouseDown>
+			<OnEvent>
+				if event == "CVAR_UPDATE" then 
+					if GetCVarBool("ActionButtonUseKeyDown") == true then
+						self:RegisterForClicks("RightButtonDown");				
+					else
+						self:RegisterForClicks("RightButtonUp");				
+					end
+				end
+											
+				if event == "UPDATE_BINDINGS" or event == "PLAYER_ENTERING_WORLD" then
+					local name = self:GetName()
+					local binding = "USE"..name:sub(5)
+					binding = GetBindingKey(binding)
+					if binding then
+						SetOverrideBindingClick(self, true, binding, name, "RightButton")
+					end
+				end
+			</OnEvent>
+		</Scripts>
+	</Button>
+
+
+	<Button name="SecureQuickActionButtonTemplate" inherits="SecureActionButtonTemplate" virtual="true">
+		<Scripts>
+			<OnLoad>
+				local name = self:GetName()
+				self.slot = tonumber(name:reverse():sub(1,1))
+				
+				if name:sub(5,5) == "M" then
+					self.tag = "Mount"
+				elseif name:sub(5,5) == "P" then
+					self.tag = "Pet"
+				elseif name:sub(5,5) == "T" then
+					self.tag = "Toy"
+				elseif name:sub(5,5) == "B" then
+					self.tag = "Bag"
+				end
+				
+				self:RegisterEvent("UPDATE_BINDINGS");
+				self:RegisterEvent("PLAYER_ENTERING_WORLD");
+				self:RegisterEvent("CVAR_UPDATE");
+
+				if GetCVarBool("ActionButtonUseKeyDown") == true then
+					self:RegisterForClicks("RightButtonDown");				
+				else
+					self:RegisterForClicks("RightButtonUp");				
+				end
+
+				if self.tag == "Toy" then
+					self:SetAttribute("type2", "click");
+					self:SetAttribute("clickbutton", _G["ToyContainerFrameItem"..self.slot])
+				elseif self.tag == "Bag" then
+					self:SetAttribute("type2", "item");
+					self:SetAttribute("item", "0 "..self.slot)
+				end
+				
+			</OnLoad>
+			<OnMouseUp>
+				QuickActionsButton_PreClick(self, button, false, true)
+			</OnMouseUp>
+			<OnMouseDown>
+				QuickActionsButton_PreClick(self, button, true, true)
+			</OnMouseDown>
+			<OnEvent>
+				if event == "CVAR_UPDATE" then 
+					if GetCVarBool("ActionButtonUseKeyDown") == true then
+						self:RegisterForClicks("RightButtonDown");				
+					else
+						self:RegisterForClicks("RightButtonUp");				
+					end
+				end
+			
+				if InCombatLockdown() then
+					return false
+				end
+								
+				if event == "UPDATE_BINDINGS" or event == "PLAYER_ENTERING_WORLD" then
+					local name = self:GetName()
+					local binding = "USE"..name:sub(5)
+					binding = GetBindingKey(binding)
+					if binding then
+						SetOverrideBindingClick(self, true, binding, name, "RightButton")
+					end
+				end
+			</OnEvent>
+		</Scripts>
+	</Button>
+	
+	<Button name="CCB_MOUNT1" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_MOUNT2" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_MOUNT3" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_MOUNT4" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_MOUNT5" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_MOUNT6" inherits="QuickActionButtonTemplate"/>
+	
+	<Button name="CCB_PET1" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_PET2" inherits="QuickActionButtonTemplate"/>
+	<Button name="CCB_PET3" inherits="QuickActionButtonTemplate"/>
+
+	<Button name="CCB_TOY1" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_TOY2" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_TOY3" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_TOY4" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_TOY5" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_TOY6" inherits="SecureQuickActionButtonTemplate"/>
+
+	<Button name="CCB_BAG1" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG2" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG3" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG4" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG5" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG6" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG7" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG8" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG9" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG10" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG11" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG12" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG13" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG14" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG15" inherits="SecureQuickActionButtonTemplate"/>
+	<Button name="CCB_BAG16" inherits="SecureQuickActionButtonTemplate"/>
+
+
+
+	
+</Ui>

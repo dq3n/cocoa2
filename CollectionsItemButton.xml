@@ -1,0 +1,356 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="CollectionsItemButton.lua"/>
+	
+	<FontString name="ccHotKeyTemplate" parentKey="HotKey" inherits="NumberFontNormalSmallGray" justifyH="RIGHT" virtual="true">
+		<Size>
+			<AbsDimension x="36" y="10"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="3" y="-4"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</FontString>
+
+	
+	<Button name="CollectionsContainerButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="37" y="37"/>
+		</Size>
+		<Frames>
+			<Cooldown parentKey="Cooldown" drawBling="false" inherits="CooldownFrameTemplate"/>
+		</Frames>
+		<NormalTexture name="$parentNormalTexture" file="Interface\Buttons\UI-Quickslot2">
+			<Size>
+				<AbsDimension x="64" y="64"/>
+			</Size>
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="-1"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</NormalTexture>
+		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+		<Layers>
+			<Layer level="BORDER">
+				<Texture name="$parentIconTexture" parentKey="icon"/>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<Texture name="$parentstatus" file="Interface\AddOns\ccBags\Textures\Emotion_0" parentKey="status" hidden="true">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parent" x="9" y="-11"/>
+                    </Anchors>
+                       <Animations>
+						 <AnimationGroup parentKey="Pulse">
+						   <Alpha FromAlpha="0" ToAlpha="0.5" duration="0.4" order="1"/>
+						   <Alpha FromAlpha="0.5" ToAlpha="1" duration="0.6" order="2"/>
+						   <Alpha FromAlpha="1" ToAlpha="0.9" duration="0.2" order="3"/>
+						   <Alpha FromAlpha="0.9" ToAlpha="0.1" duration="0.5" order="4"/>
+						   <Alpha FromAlpha="0.1" ToAlpha="1" duration="0.6" order="5"/>
+						   <Alpha FromAlpha="1" ToAlpha="0.9" duration="0.4" order="6"/>
+						   <Alpha FromAlpha="0.9" ToAlpha="0.1" duration="0.6" order="7"/>
+						   <Alpha FromAlpha="0" ToAlpha="1" duration="0.4" order="8"/>
+						   <Alpha FromAlpha="1" ToAlpha="0.9" duration="0.4" order="9"/>
+						   <Alpha FromAlpha="0.9" ToAlpha="0" duration="0.4" order="10"/>
+						   <Scripts>
+							 <OnPlay>
+							 	self:GetParent():Show()
+								self:GetParent():SetAlpha(0)
+							 </OnPlay>
+							 <OnFinished>
+							   self:GetParent():SetAlpha(0)
+							   self:GetParent():Hide()
+							 </OnFinished>
+						   </Scripts>
+						 </AnimationGroup>
+					   </Animations>
+                </Texture>
+			</Layer>
+		  <Layer level="OVERLAY" textureSubLevel="3">
+                <Texture name="$parentflair" file="Interface\AddOns\ccBags\Textures\Emotion_5" parentKey="flair" hidden="true">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parent" x="9" y="-11"/>
+                    </Anchors>
+                       <Animations>
+						 <AnimationGroup parentKey="Pulse">
+						   <Alpha FromAlpha="0" ToAlpha="0.25" duration="0.35" order="1"/>
+						   <Alpha FromAlpha="0.25" ToAlpha="1" duration="0.25" order="2"/>
+						   <Alpha FromAlpha="1" ToAlpha="0.9" duration="0.6" order="3"/>
+						   <Alpha FromAlpha="0.9" ToAlpha="0.2" duration="0.4" order="4"/>
+						   <Alpha FromAlpha="0.2" ToAlpha="1" duration="0.7" order="5"/>
+						   <Alpha FromAlpha="1" ToAlpha="0.9" duration="0.3" order="6"/>
+						   <Alpha FromAlpha="0.9" ToAlpha="0.2" duration="0.7" order="7"/>
+						   <Alpha FromAlpha="0.2" ToAlpha="1" duration="0.3" order="8"/>
+						   <Alpha FromAlpha="1" ToAlpha="0.9" duration="0.6" order="9"/>
+						   <Alpha FromAlpha="0.9" ToAlpha="0" duration="0.42" order="10"/>
+						   <Scripts>
+							 <OnPlay>
+							 	self:GetParent():Show()
+								self:GetParent():SetAlpha(0)
+							 </OnPlay>
+							 <OnFinished>
+							   self:GetParent():SetAlpha(0)
+							   self:GetParent():Hide()
+							 </OnFinished>
+						   </Scripts>
+						 </AnimationGroup>
+					   </Animations>
+                </Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="check" alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeTo="$parentIcon" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<Texture name="$parentQualityBorder" parentKey="qualityBorder" file="Interface\Common\WhiteIconFrame" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.icon"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.icon"/>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true" parentKey="Count">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-5" y="2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentStock" inherits="NumberFontNormalYellow" justifyH="LEFT" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<FontString name="$parentHotKey" parentKey="HotKey" inherits="NumberFontNormalSmallGray" justifyH="RIGHT">
+					<Size>
+						<AbsDimension x="36" y="10"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="3" y="-4"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentSearchOverlay" parentKey="searchOverlay" setAllPoints="true" hidden="true">
+					<Color r="0" g="0" b="0" a="0.8"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<PreClick>
+				CollectionsContainerButton_PreClick(self, button, down)
+			</PreClick>
+			<OnEnter>
+				_G[self:GetParent().tag.."ContainerButton_UpdateTooltip"](self)
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+				self.showingTooltip = false;
+			</OnLeave>
+			<OnLoad>
+				SetItemButtonNormalTextureVertexColor(self, 0.85, 0.85, 0.85)
+				_G[self:GetName().."NormalTexture"]:SetAlpha(0.85)
+				self:SetHitRectInsets(-2, -2, -2, -2)
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				self:RegisterForDrag("LeftButton");
+				self.Cooldown:SetDrawEdge(false)
+				
+				self.slot = tonumber(self:GetName():reverse():sub(1,1))
+			</OnLoad>
+			<OnEvent>
+				if ( event == "SPELL_UPDATE_USABLE") then
+					CollectionsContainerButton_Update(self)
+				end
+				
+				if ( event == "ACTIONBAR_SHOWGRID") or ( event == "ACTIONBAR_HIDEGRID")  then
+					local kind = self:GetParent().tag
+					if C_GetCursorIndex(kind) == false or C_GetCursorIndex(kind) == nil then
+						self.showkey = false
+						CollectionsContainerButton_BindingUpdate(self)
+					else
+						self.showkey = true
+						local binding = "USE"..kind:upper()..self.slot
+						binding = GetBindingKey(binding)
+						self.HotKey:SetText(binding)
+						self.HotKey:Show()
+					end
+				end
+				
+				if ( event == "COMPANION_UPDATE") then
+					CollectionsContainerButton_Update(self)
+				end
+				
+				if ( event == "SPELL_UPDATE_COOLDOWN") then
+					CollectionsContainerButton_Update(self)
+				end
+				
+				if ( event == "PET_JOURNAL_LIST_UPDATE") and self:GetParent().tag == "Pet" then
+					local name = self:GetName()
+					local index = CCB_CHAR_SAVE[name]
+					if index == nil then 
+						return
+					end
+					local speciesID, customName, level, xp, maxXp, displayID, isFavorite, name, petIcon, petType, creatureID, sourceText, description, isWild, canBattle, tradable, unique = C_PetJournal.GetPetInfoByPetID(index);
+					if  speciesID == nil then
+					CollectionsContainerButton_Update(self)
+					end
+				end
+			</OnEvent>
+			<OnShow>
+				self:RegisterEvent("SPELL_UPDATE_USABLE")
+				self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+				self:RegisterEvent("COMPANION_UPDATE")
+				self:RegisterEvent("PET_JOURNAL_LIST_UPDATE")
+				self:RegisterEvent("ACTIONBAR_SHOWGRID")
+				self:RegisterEvent("ACTIONBAR_HIDEGRID")
+				CollectionsContainerButton_Update(self)
+			</OnShow>
+			<OnHide>
+				self:UnregisterEvent("SPELL_UPDATE_USABLE")
+				self:UnregisterEvent("SPELL_UPDATE_COOLDOWN")
+				self:UnregisterEvent("COMPANION_UPDATE")
+				self:UnregisterEvent("PET_JOURNAL_LIST_UPDATE")
+				self:UnregisterEvent("ACTIONBAR_SHOWGRID")
+				self:UnregisterEvent("ACTIONBAR_HIDEGRID")
+				self.status.Pulse:Stop()
+				self.flair.Pulse:Stop()
+			</OnHide>
+			<OnDragStart>
+				CollectionsContainerButton_PreClick(self, "LeftButton", true);
+			</OnDragStart>
+		</Scripts>
+	 </Button>
+	 
+	 
+	 <Button name="ContainerMicroButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="24" y="24"/>
+		</Size>
+		<Frames>
+			<Cooldown parentKey="Cooldown" drawBling="false" inherits="CooldownFrameTemplate"/>
+		</Frames>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="check" alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeTo="$parentIcon" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture name="$parentIconTexture" parentKey="icon"/>
+				<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-5" y="2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentStock" inherits="NumberFontNormalYellow" justifyH="LEFT" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<NormalTexture name="$parentNormalTexture" urgency="5" file="Interface\Buttons\UI-Quickslot2">
+			<Size>
+				<AbsDimension x="26" y="26"/>
+			</Size>
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="-1"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</NormalTexture>
+		<PushedTexture file="Interface\AddOns\ccBags\Textures\BorderDown">
+			  <Size>
+				<AbsDimension x="13" y="13"/>
+			  </Size>
+			<TexCoords left="0" right="0.906" top="0" bottom="0.906"/>
+		</PushedTexture>
+		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				local selfname = self:GetName()
+				local parent = self:GetParent()
+				local parentname = parent:GetName()
+				local framename = string.sub(selfname, string.len(parentname)+1)
+				local texturestring = "Interface\\AddOns\\ccBags\\Textures\\"..framename
+				_G[self:GetName().."IconTexture"]:SetTexture(texturestring);
+				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.8615, 0, 0.8615)
+				_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderUp");
+				_G[self:GetName().."NormalTexture"]:SetTexCoord(0, 0.906, 0, 0.906);
+				self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+				self:RegisterEvent("PLAYER_REGEN_DISABLED");
+				self:RegisterEvent("PLAYER_REGEN_ENABLED");
+				self:RegisterEvent("TOYS_UPDATED");
+				self:RegisterEvent("COMPANION_UPDATE");
+				self.timer = 0
+				self.state = 0
+			</OnLoad>
+			<OnEvent>
+				ContainerMicroButton_OnEvent(self, event, ...)
+			</OnEvent>
+			<PreClick>
+				if InCombatLockdown() and self.secure == true then
+					UIErrorsFrame:AddMessage("Cannot access this container while you are in combat.", 1.0, 0.1, 0.1, 1.0);
+					return false
+				end
+				
+				if self.disabled == true then
+					return false
+				end
+			
+				local duration = self.Cooldown:GetCooldownDuration()
+				if duration > 0 then
+					return
+				end
+				if self:GetScript("OnUpdate") == nil then
+					local selfname = self:GetName()
+					_G[selfname.."_PreClick"](self, button)
+				end
+			</PreClick>
+			<OnEnter>
+				_G[self:GetName().."_UpdateTooltip"](self)
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+				self.showingTooltip = false;
+			</OnLeave>
+			<OnShow>
+				ContainerMicroButton_OnShow(self)
+			</OnShow> 
+		</Scripts>
+	</Button>
+	
+	
+</Ui>

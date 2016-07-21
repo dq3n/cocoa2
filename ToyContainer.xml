@@ -1,0 +1,410 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="ToyContainer.lua"/>
+	
+		<Button name="ToyContainerButtonTemplate" inherits="SecureActionButtonTemplate, CollectionsContainerButtonTemplate" virtual="true">
+			<Attributes>
+				<Attribute name="type2" value="toy" />
+			</Attributes>
+			<Frames>
+				<Cooldown parentKey="Cooldown" drawBling="true" inherits="CooldownFrameTemplate"/>
+			</Frames>
+			<Scripts>
+			<PostClick>
+				ToyContainerFrameDiceButton_SetCooldown(ToyContainerFrameDiceButton)
+			</PostClick>
+			</Scripts>
+		</Button>
+		
+		<Button name="ToyContainerCardButtonTemplate" inherits="SecureActionButtonTemplate, ToyContainerButtonTemplate" virtual="true">
+			<Scripts>
+				<OnLoad>
+				SetItemButtonNormalTextureVertexColor(self, 1, 1, 1)
+				_G[self:GetName().."NormalTexture"]:SetAlpha(0.66)
+				self:SetHitRectInsets(-2, -2, -2, -2)
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				self:RegisterForDrag("LeftButton");
+				self.Cooldown:SetDrawEdge(false)
+				
+				self.slot = tonumber(self:GetName():reverse():sub(1,1))
+				</OnLoad>
+				<PreClick function="ToyContainerCardItem_PreClick"/>
+				<OnDragStart>
+					ToyContainerCardItem_PreClick(self, "LeftButton");
+				</OnDragStart>
+			</Scripts>
+		</Button>
+
+            
+        <Frame name="ToyContainerFrame" inherits="CollectionsContainerTemplate" parent="UIParent">
+			<Size>
+				<AbsDimension x="192" y="151"/>
+			</Size>
+			<Frames>
+				<Button name="$parentDiceButton" inherits="SecureActionButtonTemplate, ContainerMicroButtonTemplate">
+					<Attributes>
+						<Attribute name="type" value="toy" />
+					</Attributes>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="ToyContainerFrame" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="98" y="-34"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Scripts>
+						<OnEvent>
+							if event == "SPELL_UPDATE_COOLDOWN" then
+								ToyContainerFrameDiceButton_SetCooldown(self)
+							end
+						</OnEvent>
+					</Scripts>
+				</Button>
+				<Button name="$parentCardButton" inherits="ContainerMicroButtonTemplate">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentDiceButton" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentBoardButton" inherits="ContainerMicroButtonTemplate">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentCardButton" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem1" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="ToyContainerFrame" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="59" y="-66"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem2" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem3" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem4" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-41"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem5" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem6" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem5" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+			</Frames>
+			<Scripts>
+				<OnLoad>
+				self.tag = "Toy"
+				self.size = 6
+				self.secure = true
+				self.timer = 0
+				self.state = 0
+				_G[self:GetName().."CardButton"].secure = true
+				_G[self:GetName().."BoardButton"].secure = true
+				self.Portrait:SetPoint("TOPLEFT", 51,-8)
+				self.PortraitButton:SetPoint("TOPLEFT", 49,-5)
+				self.PortraitButton:SetAlpha(0.8)
+				self.Name:SetPoint("TOPLEFT", 30,-11)
+				</OnLoad>
+			</Scripts>
+		</Frame>
+		
+		<Frame name="ToyContainerBoardFrame" inherits="CollectionsContainerTemplate" frameStrata="MEDIUM" toplevel="true" hidden="true" parent="UIParent">
+			<Size>
+				<AbsDimension x="192" y="177"/>
+			</Size>
+			<Frames>
+				<Button name="$parentItem1" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="ToyContainerBoardFrame" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="59" y="-49"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem2" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem3" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem4" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-41"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem5" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem6" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem5" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				
+				<Button name="$parentItem7" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="-41"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem8" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem7" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem9" inherits="ToyContainerButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem8" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+			</Frames>
+			<Scripts>
+				<OnLoad>
+					self.size = 9
+					self.tag = "Toy"
+					self.Portrait:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BoardButton")
+					self.Portrait:SetTexCoord(0, 0.875, 0, 0.875)
+					self.secure = true
+					self.Portrait:SetPoint("TOPLEFT", 51,-8)
+					self.PortraitButton:SetPoint("TOPLEFT", 49,-5)
+					self.PortraitButton:SetAlpha(0.8)
+					self.Name:SetPoint("TOPLEFT", 30,-11)
+				</OnLoad>
+				<OnShow>
+					local x,y = self:GetSize()
+					self.ClickableTitleFrame:SetSize(x-30,16)
+	
+					self.Portrait:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BoardButton")
+					self.Portrait:SetTexCoord(0, 0.875, 0, 0.875)
+					self.Background:SetTexture("Interface\\AddOns\\ccBags\\Textures\\UI-Bag-3x3")
+
+					self:RegisterEvent("BAG_OPEN");
+					self:RegisterEvent("BAG_CLOSED");
+					self:RegisterEvent("DISPLAY_SIZE_CHANGED");
+					self:RegisterEvent("CURSOR_UPDATE");
+	
+					if self.secure then
+						self:RegisterEvent("PLAYER_REGEN_DISABLED");
+						self:RegisterEvent("PLAYER_REGEN_ENABLED");
+					end
+		
+		 			ContainerFrame1.bags[ContainerFrame1.bagsShown + 1] = self:GetName();
+					ContainerFrame1.bagsShown = ContainerFrame1.bagsShown + 1;
+					UpdateContainerFrameAnchors();
+
+					PlaySound("igBackPackOpen");
+				</OnShow>
+				<OnHide>
+					self:UnregisterEvent("BAG_OPEN");
+					self:UnregisterEvent("BAG_CLOSED");
+					self:UnregisterEvent("DISPLAY_SIZE_CHANGED");
+					self:UnregisterEvent("CURSOR_UPDATE");	
+					self:UnregisterEvent("PLAYER_REGEN_DISABLED");
+					self:UnregisterEvent("PLAYER_REGEN_ENABLED");
+					
+					local button = ToyContainerFrameBoardButton
+					button.check:Hide()
+						
+					CollectionsContainerSlotCheckState(self)
+					
+					ContainerFrame1.bagsShown = ContainerFrame1.bagsShown - 1;
+					-- Remove the closed bag from the list and collapse the rest of the entries
+					local index = 1;
+					while ContainerFrame1.bags[index] do
+						if ( ContainerFrame1.bags[index] == self:GetName() ) then
+						local tempIndex = index;
+							while ContainerFrame1.bags[tempIndex] do
+								if ( ContainerFrame1.bags[tempIndex + 1] ) then
+									ContainerFrame1.bags[tempIndex] = ContainerFrame1.bags[tempIndex + 1];
+								else
+									ContainerFrame1.bags[tempIndex] = nil;
+								end
+								tempIndex = tempIndex + 1;
+							end
+						end
+						index = index + 1;
+					end
+					UpdateContainerFrameAnchors();
+				</OnHide>
+			</Scripts>
+		</Frame>
+		
+		<Frame name="ToyContainerCardFrame" inherits="CollectionsContainerTemplate" frameStrata="MEDIUM" toplevel="true" hidden="true" parent="UIParent">
+			<Size>
+				<AbsDimension x="192" y="92"/>
+			</Size>
+			<Frames>
+				<Button name="$parentItem1" inherits="ToyContainerCardButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="ToyContainerCardFrame" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="101" y="-49"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+				<Button name="$parentItem2" inherits="ToyContainerCardButtonTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="42" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Button>
+			</Frames>
+			<Scripts>
+				<OnLoad>
+					self.size = 2
+					self.tag = "Toy"
+					self.secure = true
+					self.Portrait:SetTexture("Interface\\AddOns\\ccBags\\Textures\\CardButton")
+					self.Portrait:SetTexCoord(0, 0.875, 0, 0.875)
+					self.Portrait:SetPoint("TOPLEFT", 93,-8)
+					self.PortraitButton:SetPoint("TOPLEFT", 92,-5)
+					self.PortraitButton:SetAlpha(0.8)
+					self.Name:SetPoint("TOPLEFT", 30,-11)
+				</OnLoad>
+				<OnShow>
+					local x,y = self:GetSize()
+					self.ClickableTitleFrame:SetSize(x-30,16)
+	
+					self.Portrait:SetTexture("Interface\\AddOns\\ccBags\\Textures\\CardButton")
+					self.Portrait:SetTexCoord(0, 0.875, 0, 0.875)
+					self.Background:SetTexture("Interface\\AddOns\\ccBags\\Textures\\UI-Bag-1x2")
+
+					self:RegisterEvent("BAG_OPEN");
+					self:RegisterEvent("BAG_CLOSED");
+					self:RegisterEvent("DISPLAY_SIZE_CHANGED");
+					self:RegisterEvent("CURSOR_UPDATE");	
+					self:RegisterEvent("PLAYER_REGEN_DISABLED");
+					self:RegisterEvent("PLAYER_REGEN_ENABLED");
+		
+				 	ContainerFrame1.bags[ContainerFrame1.bagsShown + 1] = self:GetName();
+					ContainerFrame1.bagsShown = ContainerFrame1.bagsShown + 1;
+					UpdateContainerFrameAnchors();
+		
+					PlaySound("igBackPackOpen");
+				</OnShow>
+				<OnHide>
+					self:UnregisterEvent("BAG_OPEN");
+					self:UnregisterEvent("BAG_CLOSED");
+					self:UnregisterEvent("DISPLAY_SIZE_CHANGED");
+					self:UnregisterEvent("CURSOR_UPDATE");	
+					self:UnregisterEvent("PLAYER_REGEN_DISABLED");
+					self:UnregisterEvent("PLAYER_REGEN_ENABLED");
+					
+					local button = ToyContainerFrameCardButton
+					local duration = button.Cooldown:GetCooldownDuration()
+					if duration > 0 then
+						return
+					else
+						CooldownFrame_SetTimer(button.Cooldown,GetTime(),9,1)
+					end
+					button.check:Hide()
+						
+					CollectionsContainerSlotCheckState(self)
+					
+					
+					ContainerFrame1.bagsShown = ContainerFrame1.bagsShown - 1;
+					-- Remove the closed bag from the list and collapse the rest of the entries
+					local index = 1;
+					while ContainerFrame1.bags[index] do
+						if ( ContainerFrame1.bags[index] == self:GetName() ) then
+						local tempIndex = index;
+							while ContainerFrame1.bags[tempIndex] do
+								if ( ContainerFrame1.bags[tempIndex + 1] ) then
+									ContainerFrame1.bags[tempIndex] = ContainerFrame1.bags[tempIndex + 1];
+								else
+									ContainerFrame1.bags[tempIndex] = nil;
+								end
+								tempIndex = tempIndex + 1;
+							end
+						end
+						index = index + 1;
+					end
+					UpdateContainerFrameAnchors();
+				</OnHide>
+			</Scripts>
+		</Frame>
+</Ui>

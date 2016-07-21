@@ -1,0 +1,394 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="PetContainer.lua"/>
+	
+     <Button name="PetContainerBattleButtonTemplate" inherits="CollectionsContainerButtonTemplate" virtual="true" hidden="true">
+        <Frames>
+			<Cooldown parentKey="Cooldown"/>
+		</Frames>
+        <Layers>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="isDead" file="Interface\PetBattles\DeadPetIcon" hidden="true">
+                    <Size x="38" y="38"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeTo="$parentIcon" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="2">
+                <Texture name="$parentLevelBG" atlas="PetJournal-LevelBubble" useAtlasSize="true" parentKey="levelBG">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parent" x="1" y="-1"/>
+                    </Anchors>
+                </Texture>
+                <FontString name="$parentLevel" inherits="GameFontNormalSmall" justifyH="CENTER" parentKey="level">
+                    <Size x="0" y="12"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="CENTER" relativeTo="$parentLevelBG" x="1" y="-1"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<FontString name="$parentHotKey" parentKey="HotKey" inherits="NumberFontNormalSmallGray" justifyH="RIGHT">
+					<Size>
+						<AbsDimension x="10" y="10"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="3" y="-4"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+        </Layers>
+		<Scripts>
+			<OnLoad>
+				self.qualityBorder:Show()
+				SetItemButtonNormalTextureVertexColor(self, 0.85, 0.85, 0.85)
+				_G[self:GetName().."NormalTexture"]:SetAlpha(0.85)
+				self:SetHitRectInsets(-2, -2, -2, -2)
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				self:RegisterForDrag("LeftButton");
+				self.Cooldown:SetDrawEdge(false)
+				self.check:SetTexture(nil)
+				self.slot = tonumber(self:GetName():reverse():sub(1,1))
+				self:RegisterEvent("COMPANION_UPDATE")
+				self.HotKey:Hide()
+			</OnLoad>
+			<OnEvent>
+				if event == "CURSOR_UPDATE" and CCB_BP_TEMPORARY_PICKUP ~= nil then
+					local type, data, subType, subData = GetCursorInfo()
+					if (CCB_BP_TEMPORARY_PICKUP == self and type == nil ) then
+						CCB_BP_TEMPORARY_PICKUP.icon:SetDesaturated(nil)
+						CCB_BP_TEMPORARY_PICKUP.level:SetTextColor(1, 0.82, 0, 1)
+						CCB_BP_TEMPORARY_PICKUP = nil
+					end
+				end
+					
+				if ( event == "COMPANION_UPDATE") then
+					PetContainerFrame_TakeBattlepetLoadout()
+				end
+								
+				if ( event == "BATTLE_PET_CURSOR_CLEAR") then
+					PetContainerFrame_TakeBattlepetLoadout()
+				end
+			</OnEvent>
+			<OnShow>
+				self:RegisterEvent("SPELL_UPDATE_USABLE")
+				self:RegisterEvent("BATTLE_PET_CURSOR_CLEAR")
+				self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+				self:RegisterEvent("CURSOR_UPDATE")
+				self:RegisterEvent("COMPANION_UPDATE")
+				PetContainerBattleSlot_UpdateStatus(self)
+				CollectionsContainerButton_Update(self)
+				self.HotKey:Hide()
+			</OnShow>
+			<OnHide>
+				self:UnregisterEvent("SPELL_UPDATE_USABLE")
+				self:UnregisterEvent("BATTLE_PET_CURSOR_CLEAR")
+				self:UnregisterEvent("SPELL_UPDATE_COOLDOWN")
+				self:UnregisterEvent("CURSOR_UPDATE")
+				self:UnregisterEvent("COMPANION_UPDATE")
+				self.HotKey:Hide()
+			</OnHide>
+			<OnEnter>
+				ccBattlePetTooltip_Attach(ccBattlePetTooltip, "BOTTOMRIGHT", self, "TOPLEFT", 10, 5);
+				ccBattlePetUnitTooltip_UpdateForUnit(ccBattlePetTooltip,self.slot);
+				ccBattlePetTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				if ( ccBattlePetTooltip:GetParent() == self ) then
+					ccBattlePetTooltip:Hide();
+				end
+			</OnLeave>
+			<PreClick function="PetContainerBattleButton_PreClick"/>
+			<OnDragStart>
+				PetContainerBattleButton_PreClick(self, "LeftButton");
+			</OnDragStart>
+		</Scripts>
+    </Button>
+               
+    <Frame name="PetContainerFrame" inherits="CollectionsContainerTemplate" parent="UIParent">
+		<Size>
+			<AbsDimension x="192" y="110"/>
+		</Size>
+		<Frames>
+			<Button name="$parentTreatButton" inherits="ContainerMicroButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="PetContainerFrame" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="126" y="-34"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentBattleButton" inherits="ContainerMicroButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentTreatButton" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentReviveButton" inherits="SecureActionButtonTemplate, ContainerMicroButtonTemplate" hidden="true">
+				<Attributes>
+					<Attribute name="type" value="spell" />
+					<Attribute name="spell" value="125439" />
+				</Attributes>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="PetContainerFrame" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="126" y="-34"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentItem1" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="PetContainerFrame" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="59" y="-65"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentItem2" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentItem3" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentBattleItem1" inherits="PetContainerBattleButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="PetContainerFrame" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="59" y="-65"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentBattleItem2" inherits="PetContainerBattleButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentBattleItem1" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentBattleItem3" inherits="PetContainerBattleButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentBattleItem2" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+		</Frames>		
+		<Scripts>
+			<OnLoad>
+				self.tag = "Pet"
+				self.secure = true
+				self.timer = 0
+				self.state = 0
+				self.size = 3
+				CCB_PETCONTAINER_STATE = 0
+				self.Portrait:SetPoint("TOPLEFT", 51,-8)
+				self.PortraitButton:SetPoint("TOPLEFT", 49,-5)
+				self.PortraitButton:SetAlpha(0.8)
+				self.Name:SetPoint("TOPLEFT", 30,-11)
+				_G[self:GetName().."BattleButton"].secure = true
+				_G[self:GetName().."ReviveButton"].secure = true
+				_G[self:GetName().."ReviveButton"].spellID = 125439
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	
+	<Frame name="ccBattlePetTooltipTemplate" inherits="PetBattleUnitFrame,TooltipBorderedFrameTemplate" frameStrata="TOOLTIP" virtual="true" hidden="true">
+		<Size x="240" y="190"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon">
+					<Size x="38" y="38"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="15" y="-15"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Name" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+					<Size x="160" y="33"/>
+					<Anchors>
+						<Anchor point="TOP" relativeKey="$parent.PetType" relativePoint="TOP" x="3" y="-15"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="HealthBorder">
+					<Size x="217" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.PetType.Icon" relativePoint="TOPLEFT" x="12" y="-50"/>
+					</Anchors>
+					<Color r="0.3" g="0.3" b="0.3"/>
+				</Texture>
+				<Texture parentKey="XPBorder">
+					<Size x="217" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.HealthBorder" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+					</Anchors>
+					<Color r="0.3" g="0.3" b="0.3"/>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture parentKey="HealthBG">
+					<Size x="215" y="14"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.HealthBorder" relativePoint="TOPLEFT" x="1" y="-1"/>
+					</Anchors>
+					<Color r="0" g="0" b="0"/>
+				</Texture>
+				<Texture parentKey="XPBG">
+					<Size x="215" y="14"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.XPBorder" relativePoint="TOPLEFT" x="1" y="-1"/>
+					</Anchors>
+					<Color r="0" g="0" b="0"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<Texture parentKey="ActualHealthBar" file="Interface\RaidFrame\Raid-Bar-Resource-Fill">
+					<Size x="215" y="15"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.HealthBG" relativePoint="TOPLEFT" x="0" y="0"/>
+					</Anchors>
+					<Color r="0" g="1" b="0"/>
+				</Texture>
+				<Texture parentKey="XPBar" file="Interface\RaidFrame\Raid-Bar-Resource-Fill">
+					<Size x="215" y="15"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.XPBG" relativePoint="TOPLEFT" x="0" y="0"/>
+					</Anchors>
+					<Color r="0.08203125" g="0.2578125" b="0.6640625"/> <!--That's right, no SigFigs. I'm sticking it to the man.-->
+				</Texture>
+				<FontString parentKey="StatsLabel" inherits="GameFontNormal" text="PET_BATTLE_STATS_LABEL" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.XPBar" relativePoint="BOTTOMLEFT" x="1" y="-8"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="AbilitiesLabel" inherits="GameFontNormal" text="PET_BATTLE_ABILITIES_LABEL" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.XPBar" relativePoint="BOTTOMLEFT" x="81" y="-8"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="AttackIcon" file="Interface\PetBattles\PetBattle-StatIcons">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.StatsLabel" relativePoint="BOTTOMLEFT" x="3" y="-7"/>
+					</Anchors>
+					<TexCoords left="0.0" right="0.5" top="0.0" bottom="0.5"/>
+				</Texture>
+				<FontString parentKey="AttackAmount" inherits="GameFontHighlightLarge" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.AttackIcon" relativePoint="RIGHT" x="10" y="0"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="SpeedIcon" file="Interface\PetBattles\PetBattle-StatIcons">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.AttackIcon" relativePoint="BOTTOMLEFT" x="0" y="-7"/>
+					</Anchors>
+					<TexCoords left="0.0" right="0.5" top="0.5" bottom="1.0"/>
+				</Texture>
+				<FontString parentKey="SpeedAmount" inherits="GameFontHighlightLarge" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.SpeedIcon" relativePoint="RIGHT" x="10" y="0"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="AbilityIcon1">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.AbilitiesLabel" relativePoint="BOTTOMLEFT" x="3" y="-6"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="AbilityName1" inherits="GameFontHighlight" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="120" y="28"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.AbilityIcon1" relativePoint="RIGHT" x="5" y="0"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="AbilityIcon2">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.AbilityIcon1" relativePoint="BOTTOMLEFT" x="0" y="-7"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="AbilityName2" inherits="GameFontHighlight" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="120" y="24"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.AbilityIcon2" relativePoint="RIGHT" x="5" y="0"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="AbilityIcon3">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.AbilityIcon2" relativePoint="BOTTOMLEFT" x="0" y="-7"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="AbilityName3" inherits="GameFontHighlight" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="120" y="24"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.AbilityIcon3" relativePoint="RIGHT" x="5" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString parentKey="HealthText" inherits="GameFontHighlightSmall" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.HealthBG" relativePoint="CENTER" x="0" y="1"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="XPText" inherits="GameFontHighlightSmall" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.XPBG" relativePoint="CENTER" x="0" y="1"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="PetType">
+				<Size x="33" y="33"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="12" y="-10"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Icon" setAllPoints="true">
+							<TexCoords left="0.79687500" right="0.49218750" top="0.50390625" bottom="0.65625000"/>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				ccBattlePetTooltip_OnLoad(self);
+			</OnLoad>
+		</Scripts>
+	</Frame>
+	<Frame name="ccBattlePetTooltip" inherits="ccBattlePetTooltipTemplate"/>
+
+</Ui>

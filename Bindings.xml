@@ -1,0 +1,38 @@
+<Bindings>
+
+  	<Binding name="USEBAG1" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG2" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG3" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG4" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG5" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG6" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG7" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG8" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG9" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG10" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG11" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG12" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG13" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG14" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG15" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEBAG16" runOnUp="true" header="BACKPACK" category="BINDING_HEADER_CCBAGS"/>
+
+  	<Binding name="USEMOUNT1" runOnUp="true" header="MOUNT" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEMOUNT2" runOnUp="true" header="MOUNT" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEMOUNT3" runOnUp="true" header="MOUNT" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEMOUNT4" runOnUp="true" header="MOUNT" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEMOUNT5" runOnUp="true" header="MOUNT" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEMOUNT6" runOnUp="true" header="MOUNT" category="BINDING_HEADER_CCBAGS"/>
+  	
+  	<Binding name="USEPET1" runOnUp="true" header="PET" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEPET2" runOnUp="true" header="PET" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USEPET3" runOnUp="true" header="PET" category="BINDING_HEADER_CCBAGS"/>
+
+  	<Binding name="USETOY1" runOnUp="true" header="TOY" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USETOY2" runOnUp="true" header="TOY" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USETOY3" runOnUp="true" header="TOY" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USETOY4" runOnUp="true" header="TOY" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USETOY5" runOnUp="true" header="TOY" category="BINDING_HEADER_CCBAGS"/>
+  	<Binding name="USETOY6" runOnUp="true" header="TOY" category="BINDING_HEADER_CCBAGS"/>
+  	
+</Bindings>

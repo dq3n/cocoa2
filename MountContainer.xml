@@ -1,0 +1,89 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="MountContainerFrame.lua"/>
+	
+	<Frame name="TransmogContainerFrame">
+		<Scripts>
+			<OnLoad>
+				self.tag = "Transmog"
+				self.secure = false
+			</OnLoad>
+			<OnShow>
+				self:Hide()
+			</OnShow>
+		</Scripts>
+	</Frame>
+            
+    <Frame name="MountContainerFrame" inherits="CollectionsContainerTemplate" parent="UIParent">
+		<Size>
+			<AbsDimension x="276" y="91"/>
+		</Size>
+		<Frames>
+			<Button name="$parentItem1" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="MountContainerFrame" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="18" y="-49"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentItem2" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parentItem3" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<Button name="$parentItem4" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem3" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<Button name="$parentItem5" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="42" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<Button name="$parentItem6" inherits="CollectionsContainerButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentItem4" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="84" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self.tag = "Mount"
+				self.secure = false
+				self.timer = 0
+				self.state = 0
+			</OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>

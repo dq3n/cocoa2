@@ -1,0 +1,33 @@
+## Interface: 60200
+## Title: ccBags_DEV
+## Version: 0.00
+## Author: DQ3N
+## Notes: Unique bags for your mounts, pets, toys, and items.
+## SavedVariables: CCB_ACCOUNT_SAVE
+## SavedVariablesPerCharacter: CCB_CHAR_SAVE
+
+GlobalStrings.lua
+
+CollectionsItemButton.lua
+CollectionsItemButton.xml
+CollectionsContainerFrame.lua
+CollectionsContainerFrame.xml
+ActionBarContainerButton.lua
+ActionBarContainerButton.xml
+BagContainer.lua
+BagContainer.xml
+MountContainer.lua
+MountContainer.xml
+ToyContainer.lua
+ToyContainer.xml
+PetContainer.lua
+PetContainer.xml
+QuickActions.lua
+QuickActions.xml
+
+
+# Credits 
+# Will Wang: Programming, Art and Design
+# Ted Lougheed: Programming
+# Neil Christie: Programming 
+# Copyright 2016
