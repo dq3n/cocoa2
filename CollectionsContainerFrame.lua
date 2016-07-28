@@ -74,7 +74,7 @@ function CollectionsContainerFrame_OnHide(self)
 			index = index + 1;
 		end
 	end
-
+	CollectionsContainerSlotCheckState(_G[self.tag.."ContainerSlotButton"])
 end
 
 
@@ -105,8 +105,6 @@ function CollectionsContainerFrame_OnShow(self)
 	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("DISPLAY_SIZE_CHANGED");
-
-
 	if self.tag == "Mount" then
 		self:RegisterEvent("SPELLS_CHANGED");
 		MountContainerFrame_UnlockCheck(self)
@@ -114,15 +112,7 @@ function CollectionsContainerFrame_OnShow(self)
 		self:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
 		self:RegisterEvent("PET_JOURNAL_PET_DELETED");
 	end
- 	
- 	for i = 1, NUM_CCB_SETTINGS do
- 		local active = GetCollectionsBagSlotFlag(self, i);
-		if active then
-			self.SettingsIcon.Icon:SetTexture(CCB_SETTINGS_ICONS[i]);
-			self.SettingsIcon:Show();
-		end
-	end
-	
+ 		
 	local slotbutton = _G[self.tag.."ContainerSlotButton"]
 
 	if slotbutton.QuickAction:IsShown() then
@@ -146,6 +136,7 @@ function CollectionsContainerFrame_OnShow(self)
 		end
 	end 	
 	
+	CollectionsContainerSlotCheckState(_G[self.tag.."ContainerSlotButton"])
 	UpdateContainerFrameAnchors()
 end
 
@@ -297,181 +288,6 @@ function CollectionsContainerFrame_RemoveQuickCast(self)
 		ClearOverrideBindings(self)
 		self.bound = nil
 	end
-
-end
-
-
-	
-
-NUM_CCB_SETTINGS = 3
-
-CCB_SETTINGS_BARNAME = {
-	[1] = "Action",
-	[2] = "MultiBarBottomLeft",
-	[3] = "MultiBarBottomRight",
-};
-
-CCB_SETTINGS_COMMAND = {
-	[1] = "ACTIONBUTTON",
-	[2] = "MULTIACTIONBAR1BUTTON",
-	[3] = "MULTIACTIONBAR2BUTTON",
-};
-
-CCB_SETTINGS_LABELS = {
-	[1] = "Bottom",
-	[2] = "Left",
-	[3] = "Right",
-};
-
-CCB_SETTINGS_ICONS = {
-	[1] = "Interface\\AddOns\\ccBags\\Textures\\SettingsIcon_B",
-	[2] = "Interface\\AddOns\\ccBags\\Textures\\SettingsIcon_L",
-	[3] = "Interface\\AddOns\\ccBags\\Textures\\SettingsIcon_R",
-};
-
-
-
-function SetCollectionsBagSlotFlag(self, index, value)
-	
-	local name = self:GetName()
-
-	if index == 0 then -- Set Close on Quick Cast
-	
-		if value then
-			CCB_ACCOUNT_SAVE[name] = true
-		else
-			CCB_ACCOUNT_SAVE[name] = nil
-		end
-	else
-		if value then -- Sets a specific actionbar button to a bag
-		
-		
-			-- Clear any duplicate assignments
-			if CCB_ACCOUNT_SAVE[index] ~= nil then
-				local frame = _G[CCB_ACCOUNT_SAVE[index]]
-				if frame:IsShown() then
-					CollectionsContainerFrame_RemoveQuickCast(frame)
-				end
-				frame.SettingsIcon:Hide()
-			end
-			
-			-- Clear any previous assignments
-			for i = 1, NUM_CCB_SETTINGS do
-				if i ~= index and CCB_ACCOUNT_SAVE[i] == name then
-					if self:IsShown() then
-						CollectionsContainerFrame_RemoveQuickCast(self)
-					end
-					CCB_ACCOUNT_SAVE[i] = nil
-				end
-			end
-			
-			-- assign new setting
-			CCB_ACCOUNT_SAVE[index] = name
-			if self:IsShown() then
-				CollectionsContainerFrame_InitializeQuickCast(self)
-			end
-			
-		else -- remove setting
-			if self:IsShown() then
-				CollectionsContainerFrame_RemoveQuickCast(self)
-			end
-			CCB_ACCOUNT_SAVE[index] = nil
-		end
-	end
-	
-	
-end
-
-function GetCollectionsBagSlotFlag(self, index)
-
-	local name = self:GetName()
-
-	if index == 0 then
-		if CCB_ACCOUNT_SAVE[name] == true then
-			return true
-		else
-			return false
-		end
-	else
-		if CCB_ACCOUNT_SAVE[index] == name then
-			return true
-		else
-			return false
-		end
-	end
-
-end
-
-
-
-function CollectionsContainerFrameDropDown_OnLoad(self)
-
-		UIDropDownMenu_Initialize(_G[self:GetParent():GetName().."DropDown"], CollectionsContainerFrameDropDown_Initialize, "MENU");
-end
-
-function CollectionsContainerFrameDropDown_Initialize(self, level)
-
-	local frame = self:GetParent();
-	local info = UIDropDownMenu_CreateInfo();	
-
-
-	info.text = "Assign to Action Bar:";
-	info.isTitle = 1;
-	info.notCheckable = 1;
-	UIDropDownMenu_AddButton(info);
-		
-	info.notCheckable = nil;
-	info.isTitle = nil;
-	for i = 1, NUM_CCB_SETTINGS do
-		info.text = CCB_SETTINGS_LABELS[i];
-		info.func = function(_, _, _, value)
-			value = not value;
-				SetCollectionsBagSlotFlag(frame, i, value);
-			if (value) then
-				frame.SettingsIcon.Icon:SetTexture(CCB_SETTINGS_ICONS[i]);
-				frame.SettingsIcon:Show();
-			else
-				frame.SettingsIcon:Hide();
-			end
-		end;
-		info.checked = GetCollectionsBagSlotFlag(frame, i);
-		info.disabled = nil;
-		info.tooltipTitle = nil;
-		UIDropDownMenu_AddButton(info);
-	end
-	
-	--[[ Not implemented
-	
-	info.text = "Quick Cast";
-	info.isTitle = 1;
-	info.notCheckable = 1;
-	UIDropDownMenu_AddButton(info);
-	
-	info.isTitle = nil;
-	info.notCheckable = nil;
-	info.isNotRadio = true;
-	info.disabled = nil;
-
-	info.text = "Close on cast ";
-	info.func = function(_, _, _, value)
-		SetCollectionsBagSlotFlag(frame, 0, not value);
-	end;
-	info.checked = GetCollectionsBagSlotFlag(frame, 0);
-	UIDropDownMenu_AddButton(info);
-	
-	--]]
-	
-	--stop
-	info.text = "";
-	info.isTitle = 1;
-	info.notCheckable = 1;
-	UIDropDownMenu_AddButton(info);
-
-	--stop
-	info.text = "ccBags.0.0.1";
-	info.isTitle = 1;
-	info.notCheckable = 1;
-	UIDropDownMenu_AddButton(info);
 
 end
 
