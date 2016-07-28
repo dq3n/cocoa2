@@ -2,10 +2,10 @@
 ..\FrameXML\UI.xsd">
 	<Script file="MountContainerFrame.lua"/>
 	
-	<Frame name="TransmogContainerFrame">
+	<Frame name="SetContainerFrame">
 		<Scripts>
 			<OnLoad>
-				self.tag = "Transmog"
+				self.tag = "Set"
 				self.secure = false
 			</OnLoad>
 			<OnShow>
