@@ -624,27 +624,6 @@ end
 
 function ContainerMicroButton_OnShow(self)
 
-	if self.loaded ~= true then
-		self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-		local selfname = self:GetName()
-		local parent = self:GetParent()
-		local parentname = parent:GetName()
-		local framename = string.sub(selfname, string.len(parentname)+1)
-		local texturestring = "Interface\\AddOns\\ccBags\\Textures\\"..framename
-		_G[self:GetName().."IconTexture"]:SetTexture(texturestring);
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.8615, 0, 0.8615)
-		_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderUp");
-		_G[self:GetName().."NormalTexture"]:SetTexCoord(0, 0.906, 0, 0.906);
-		self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
-		self:RegisterEvent("PLAYER_REGEN_DISABLED");
-		self:RegisterEvent("PLAYER_REGEN_ENABLED");
-		self:RegisterEvent("TOYS_UPDATED");
-		self:RegisterEvent("COMPANION_UPDATE");
-		self.timer = 0
-		self.state = 0
-		self.loaded = true
-	end
-
 	_G[self:GetName().."_UpdateDisabled"](self)
 	
 	if self:GetName() == "PetContainerFrameTreatButton" and CCB_CHAR_SAVE["TreatTimer"] then

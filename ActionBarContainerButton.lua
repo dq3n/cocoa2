@@ -18,8 +18,8 @@ Disable_BagButtons = function()
 	SetDesaturation(MountContainerSlotButtonIconTexture, true);
 	PetContainerSlotButton:Disable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, true);
-	SetContainerSlotButton:Disable();
-	--SetDesaturation(SetContainerSlotButtonIconTexture, true);
+	TransmogContainerSlotButton:Disable();
+	--SetDesaturation(TransmogContainerSlotButtonIconTexture, true);
 	ToyContainerSlotButton:Disable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, true);
 end
@@ -31,8 +31,8 @@ Enable_BagButtons = function()
 	SetDesaturation(MountContainerSlotButtonIconTexture, false);
 	PetContainerSlotButton:Enable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, false);
-	SetContainerSlotButton:Enable();
-	--SetDesaturation(SetContainerSlotButtonIconTexture, false);
+	TransmogContainerSlotButton:Enable();
+	--SetDesaturation(TransmogContainerSlotButtonIconTexture, false);
 	ToyContainerSlotButton:Enable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, false);
 end
@@ -103,7 +103,7 @@ function BackpackSlotButton_OnClick(self, button)
 		PetContainerFrame:Hide()
 		MountContainerFrame:Hide()
 		ToyContainerFrame:Hide()
-		SetContainerFrame:Hide()
+		TransmogContainerFrame:Hide()
 	end
 
 	if ( IsModifiedClick("OPENALLBAGS") ) then		
@@ -132,83 +132,15 @@ MainMenuBarBackpackButton:SetScript("OnClick", BackpackSlotButton_OnClick)
 
 
 function CollectionsContainerSlotButton_UpdateBindings(self)
-
-	if self.tag == "Mount" then
-		self.binding = "TOGGLEBAG1"
-	elseif self.tag == "Pet" then
-		self.binding = "TOGGLEBAG2"
-	elseif self.tag == "Toy" then
-		self.binding = "TOGGLEBAG3"
-	elseif self.tag == "Set" then
-		self.binding = nil
-		self.binding = "TOGGLEBAG4"
-	elseif self.tag == "Bag" then
-		self.binding = "TOGGLEBACKPACK"
-	end
 	
-	if self.binding then
-		local binding = GetBindingKey(self.binding);
-	end
-	
+	local binding = GetBindingKey(self.binding);
 	local name = self:GetName();
 	
 	if binding and name then
 	SetOverrideBindingClick(self, true, binding, name, "RightButton");
 	end
-
-end
-
-
-function CollectionsContainerSlotButton_UpdateHandler(self)
-
-	if self.tag == "Mount" then
-		self:SetFrameRef("ContainerFrame", MountContainerFrame)
-	elseif self.tag == "Pet" then
-		self:SetFrameRef("ContainerFrame", PetContainerFrame)
-	elseif self.tag == "Toy" then
-		self:SetFrameRef("ContainerFrame", ToyContainerFrame)
-		self:SetFrameRef("ContainerFrame", ToyContainerFrame)
-		self:SetFrameRef("ContainerFrame", ToyContainerFrame)
-	elseif self.tag == "Set" then
-		self:SetFrameRef("ContainerFrame", SetContainerFrame)
-	elseif self.tag == "Bag" then
-		self:SetFrameRef("ContainerFrame", ContainerFrame1)
-	end
 	
-	self:SetAttribute("_onclick", [=[
-	  if self:GetFrameRef("ContainerFrame"):IsShown() then
-	 	 self:GetFrameRef("ContainerFrame"):Hide();
-	  elseif not(self:GetFrameRef("ContainerFrame"):IsShown()) then
-	 	 self:GetFrameRef("ContainerFrame"):Show();
-	  end
-	]=]);
-
-
-end
-
-
-
-function CollectionsContainerSlotButton_UpdateIcon(self)
-
-	local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
-
-	if self.tag == "Mount" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-	elseif self.tag == "Pet" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-	elseif self.tag == "Toy" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-	elseif self.tag == "Set" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-		_G[self:GetName().."IconTexture"]:SetDesaturated(true)
-	elseif self.tag == "Bag" then
-		_G[self:GetName().."IconTexture"]:SetTexture("Interface\\Buttons\\Button-Backpack-Up")
-	end
-
+	
 end
 
 
@@ -238,9 +170,9 @@ end
 		PetContainerFrame:Hide()
 	end
 	totalBags = totalBags +1
-	if ( SetContainerFrame:IsShown() ) then
+	if ( TransmogContainerFrame:IsShown() ) then
 		bagsOpen = bagsOpen +1;
-		SetContainerFrame:Hide()
+		TransmogContainerFrame:Hide()
 	end
 
 	totalBags = totalBags +1
@@ -263,7 +195,7 @@ end
 		OpenBackpack();
 		MountContainerFrame:Show()
 		PetContainerFrame:Show()
-		SetContainerFrame:Show()
+		TransmogContainerFrame:Show()
 		ToyContainerFrame:Show()
 		
 		for i=1, NUM_BAG_FRAMES, 1 do
@@ -296,7 +228,7 @@ end
 	
 	CollectionsContainerSlotCheckState(MountContainerFrame)
 	CollectionsContainerSlotCheckState(PetContainerFrame)
-	CollectionsContainerSlotCheckState(SetContainerFrame)
+	CollectionsContainerSlotCheckState(TransmogContainerFrame)
 	CollectionsContainerSlotCheckState(ToyContainerFrame)
 end
 ]]
@@ -318,7 +250,7 @@ function CollectionsContainerFrameToggle(self)
 		index = 2
 	elseif self.tag == "Toy" then
 		index = 3
-	elseif self.tag == "Set" then
+	elseif self.tag == "Transmog" then
 		index = nil
 	end
 		
@@ -364,7 +296,7 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 		index = 1
 	elseif self.tag == "Pet" then 
 		index = 2
-	elseif self.tag == "Set" then
+	elseif self.tag == "Transmog" then
 		index = 4
 	elseif self.tag == "Toy" then
 		index = 3
@@ -387,24 +319,4 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 						
 	end
 	CollectionsContainerSlotCheckState(frame)
-end
-
-
-
-function CCB_AssignTag(self)
-
-	local tag = string.sub(self:GetName(),1,1)
-	
-	if tag == "M" then
-		self.tag = "Mount"
-	elseif tag == "P" then
-		self.tag = "Pet"
-	elseif tag == "T" then
-		self.tag = "Toy"
-	elseif tag == "S" then
-		self.tag = "Set"
-	elseif tag == "B" then
-		self.tag = "Bag"
-	end
-
 end

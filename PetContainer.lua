@@ -120,7 +120,7 @@ function PetContainerFrameBattleButton_UpdateTooltip(self)
 		if self.disabled == true then
 			GameTooltip:AddLine("Requires 3 active battle pets.", 1, nil, nil, true);
 		else
-			GameTooltip:AddLine("Display your companion pets.", nil, nil, nil, true);
+			GameTooltip:AddLine("Display to your your companion pet slots.", nil, nil, nil, true);
 		end
 	end
 	self.showingTooltip = true;
