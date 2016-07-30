@@ -33,8 +33,6 @@ function CollectionsContainerFrame_OnHide(self)
 	self:UnregisterEvent("BAG_CLOSED");
 	self:UnregisterEvent("DISPLAY_SIZE_CHANGED");
 	self:UnregisterEvent("CURSOR_UPDATE");	
-	self:UnregisterEvent("PLAYER_REGEN_DISABLED");
-	self:UnregisterEvent("PLAYER_REGEN_ENABLED");
 	self:UnregisterEvent("DISPLAY_SIZE_CHANGED");
 	
 	if self.tag == "Mount" then
@@ -159,34 +157,7 @@ function CollectionsContainerFrame_OnEvent(self, event)
 	if event == "SPELLS_CHANGED" and self.tag == "Mount" then
 		MountContainerFrame_UnlockCheck(self)
 	end
-	
-	if event == "PLAYER_REGEN_DISABLED"  then
-		if self.secure == true and not self.disabled then
-			self.disabled = true
-			self.CloseButton:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Disabled")
-			self.CloseButton:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Disabled")
-			self.CloseButton:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Disabled")
-		end
-	end
-
-	if event == "PLAYER_REGEN_ENABLED"  then
-		if self.secure == true and self.disabled then
-			self.disabled = nil
-			self.CloseButton:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up")
-			self.CloseButton:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Down")
-			self.CloseButton:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight")
-		end
-		if self.DelayedQuickCast then
-			if self:IsShown() then
-				CollectionsContainerFrame_InitializeQuickCast(self)
-			else
-				self:UnregisterEvent("PLAYER_REGEN_ENABLED");
-				CollectionsContainerFrame_RemoveQuickCast(self)
-			end
-			self.DelayedQuickCast = nil
-		end
-	end
-	
+		
 	if ( event == "DISPLAY_SIZE_CHANGED" ) then
 		UpdateContainerFrameAnchors();
 	end

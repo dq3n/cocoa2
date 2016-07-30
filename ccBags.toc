@@ -7,6 +7,7 @@
 ## SavedVariablesPerCharacter: CCB_CHAR_SAVE
 
 GlobalStrings.lua
+CCB_API.lua
 
 CollectionsItemButton.lua
 CollectionsItemButton.xml

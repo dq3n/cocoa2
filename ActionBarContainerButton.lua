@@ -362,7 +362,7 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 	
 	if self.tag == "Mount" then 
 		index = 1
-	elseif self.tag == "Pet" then 
+	elseif self.tag == "Pet" then
 		index = 2
 	elseif self.tag == "Set" then
 		index = 4
@@ -387,24 +387,4 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 						
 	end
 	CollectionsContainerSlotCheckState(frame)
-end
-
-
-
-function CCB_AssignTag(self)
-
-	local tag = string.sub(self:GetName(),1,1)
-	
-	if tag == "M" then
-		self.tag = "Mount"
-	elseif tag == "P" then
-		self.tag = "Pet"
-	elseif tag == "T" then
-		self.tag = "Toy"
-	elseif tag == "S" then
-		self.tag = "Set"
-	elseif tag == "B" then
-		self.tag = "Bag"
-	end
-
 end
