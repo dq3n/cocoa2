@@ -10,22 +10,23 @@
 				<Cooldown parentKey="Cooldown" drawBling="true" inherits="CooldownFrameTemplate"/>
 			</Frames>
 			<Scripts>
-			<PostClick>
-				ToyContainerFrameDiceButton_SetCooldown(ToyContainerFrameDiceButton)
-			</PostClick>
+				<PostClick>
+					ToyContainerFrameDiceButton_SetCooldown(ToyContainerFrameDiceButton)
+				</PostClick>
 			</Scripts>
 		</Button>
 		
 		<Button name="ToyContainerCardButtonTemplate" inherits="SecureActionButtonTemplate, ToyContainerButtonTemplate" virtual="true">
 			<Scripts>
 				<OnLoad>
+				CCB_AssignTag(self)
+				CCB_AssignOwner(self)
 				SetItemButtonNormalTextureVertexColor(self, 1, 1, 1)
 				_G[self:GetName().."NormalTexture"]:SetAlpha(0.66)
 				self:SetHitRectInsets(-2, -2, -2, -2)
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				self:RegisterForDrag("LeftButton");
 				self.Cooldown:SetDrawEdge(false)
-				
 				self.slot = tonumber(self:GetName():reverse():sub(1,1))
 				</OnLoad>
 				<PreClick function="ToyContainerCardItem_PreClick"/>
@@ -379,7 +380,7 @@
 					if duration > 0 then
 						return
 					else
-						CooldownFrame_SetTimer(button.Cooldown,GetTime(),9,1)
+						CooldownFrame_Set(button.Cooldown,GetTime(),9,1)
 					end
 					button.check:Hide()
 						

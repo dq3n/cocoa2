@@ -364,7 +364,7 @@ end
 
 function CollectionsContainerButton_RemoveDuplicates(self)
 
-	local frame = self.owner()
+	local frame = self.owner
 	local kind = frame.tag
 	local framename = frame:GetName()
 	local size = frame.size

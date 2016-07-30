@@ -44,15 +44,6 @@ function CollectionsContainerFrame_OnHide(self)
 	
 	CollectionsContainerSlotCheckState(self)
 	
-	self.DelayedQuickCast = nil
-
-	if not InCombatLockdown() then
-		CollectionsContainerFrame_RemoveQuickCast(self)
-	else
-		self:RegisterEvent("PLAYER_REGEN_ENABLED");
-		self.DelayedQuickCast = true
-	end
-
 	if self.tag ~= "Mount" then
 		ContainerFrame1.bagsShown = ContainerFrame1.bagsShown - 1;
 		-- Remove the closed bag from the list and collapse the rest of the entries

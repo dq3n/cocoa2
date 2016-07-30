@@ -26,7 +26,14 @@ function CCB_AssignOwner(self)
 	elseif tag == "Pet" then
 		self.owner = _G["PetContainerFrame"]
 	elseif tag == "Toy" then
-		self.owner = _G["ToyContainerFrame"]
+		local prefixlength = strfind(self:GetName(), "Frame")
+		if prefixlength == 13 then
+			self.owner = _G["ToyContainerFrame"]
+		elseif prefixlength == 17 then
+			self.owner = _G["ToyContainerCardFrame"]
+		elseif prefixlength == 18 then
+			self.owner = _G["ToyContainerBoardFrame"]
+		end
 	elseif tag == "Set" then
 		self.owner = _G["SetContainerFrame"]
 	elseif tag == "Bag" then
