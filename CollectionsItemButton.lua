@@ -635,8 +635,8 @@ function ContainerMicroButton_OnShow(self)
 		end
 	end
 
-	if self.spellID then
-		local spellID = self.spellID
+	if self:GetAttribute("Spell") ~= nil then
+		local spellID = self:GetAttribute("Spell")
 		local startTime, duration, enable = GetSpellCooldown(spellID)
 		CooldownFrame_Set(self.Cooldown, startTime, duration, enable)
 	end

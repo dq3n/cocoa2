@@ -152,7 +152,7 @@
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 				local line = self.tag.." Container"
-				if self.tag == "Transmog" then 
+				if self.tag == "Set" then 
 					line = "Coming Soon!"
 				end
 				GameTooltip:SetText(line, 1.0, 1.0, 1.0);
@@ -204,10 +204,10 @@
 
 	
 	
-	<Button name="TransmogContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag0Slot">
+	<Button name="SetContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag0Slot">
 		<Scripts>
 			<OnLoad>
-				self.tag = "Transmog"
+				self.tag = "Set"
 				self.binding = "TOGGLEBAG4"
 			</OnLoad>
 			<OnShow>

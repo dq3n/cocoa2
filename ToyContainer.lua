@@ -322,16 +322,16 @@ function ToyContainerFrameCardButton_Shuffle()
 
 
 	--store the current filters so we can restore the ToyBox to the user's preferences after this operation
-	local filterCollected = C_ToyBox.GetFilterCollected();
-	local filterUncollected = C_ToyBox.GetFilterUncollected();
+	local filterCollected = C_ToyBox.GetCollectedShown();
+	local filterUncollected = C_ToyBox.GetUncollectedShown();
 
 	local toyTable = {}
 	CCB_CHAR_SAVE["ToyContainerCardFrameItem1"] = nil
 	CCB_CHAR_SAVE["ToyContainerCardFrameItem2"] = nil
 
 	--set the filters we need to grab the full list of collected toys
-	C_ToyBox.SetFilterCollected(true);
-	C_ToyBox.SetFilterUncollected(false);
+	C_ToyBox.SetCollectedShown(true);
+	C_ToyBox.SetUncollectedShown(false);
 
 	local numToys = C_ToyBox.GetNumFilteredToys();
 	if numToys > 1 then
@@ -368,6 +368,24 @@ function ToyContainerFrameCardButton_Shuffle()
 			end
 		end
 	end
+	
+	--in case everything is already in a bag
+	if #toyTable <= 2 then 
+		for i = 1, numToys do
+			if GetItemCooldown(C_ToyBox.GetToyFromIndex(i)) == 0 then
+				table.insert(toyTable, C_ToyBox.GetToyFromIndex(i));
+			end
+		end
+	end
+	
+	
+	--this should never run
+	if #toyTable <= 2 then 
+		for i = 1, numToys do
+			table.insert(toyTable, C_ToyBox.GetToyFromIndex(i));
+		end
+	end
+
 
 	--since there are only two slots, it's not worth putting in a loop
 	if #toyTable >= 2 then
@@ -398,7 +416,7 @@ function ToyContainerFrameCardButton_Shuffle()
 	end
 	
 	--reset the filters
-	C_ToyBox.SetFilterCollected(filterCollected);
-	C_ToyBox.SetFilterUncollected(filterUncollected);
+	C_ToyBox.SetCollectedShown(filterCollected);
+	C_ToyBox.SetUncollectedShown(filterUncollected);
 		
 end

@@ -18,8 +18,8 @@ Disable_BagButtons = function()
 	SetDesaturation(MountContainerSlotButtonIconTexture, true);
 	PetContainerSlotButton:Disable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, true);
-	TransmogContainerSlotButton:Disable();
-	--SetDesaturation(TransmogContainerSlotButtonIconTexture, true);
+	SetContainerSlotButton:Disable();
+	--SetDesaturation(SetContainerSlotButtonIconTexture, true);
 	ToyContainerSlotButton:Disable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, true);
 end
@@ -31,8 +31,8 @@ Enable_BagButtons = function()
 	SetDesaturation(MountContainerSlotButtonIconTexture, false);
 	PetContainerSlotButton:Enable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, false);
-	TransmogContainerSlotButton:Enable();
-	--SetDesaturation(TransmogContainerSlotButtonIconTexture, false);
+	SetContainerSlotButton:Enable();
+	--SetDesaturation(SetContainerSlotButtonIconTexture, false);
 	ToyContainerSlotButton:Enable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, false);
 end
@@ -103,7 +103,7 @@ function BackpackSlotButton_OnClick(self, button)
 		PetContainerFrame:Hide()
 		MountContainerFrame:Hide()
 		ToyContainerFrame:Hide()
-		TransmogContainerFrame:Hide()
+		SetContainerFrame:Hide()
 	end
 
 	if ( IsModifiedClick("OPENALLBAGS") ) then		
@@ -170,9 +170,9 @@ end
 		PetContainerFrame:Hide()
 	end
 	totalBags = totalBags +1
-	if ( TransmogContainerFrame:IsShown() ) then
+	if ( SetContainerFrame:IsShown() ) then
 		bagsOpen = bagsOpen +1;
-		TransmogContainerFrame:Hide()
+		SetContainerFrame:Hide()
 	end
 
 	totalBags = totalBags +1
@@ -195,7 +195,7 @@ end
 		OpenBackpack();
 		MountContainerFrame:Show()
 		PetContainerFrame:Show()
-		TransmogContainerFrame:Show()
+		SetContainerFrame:Show()
 		ToyContainerFrame:Show()
 		
 		for i=1, NUM_BAG_FRAMES, 1 do
@@ -228,7 +228,7 @@ end
 	
 	CollectionsContainerSlotCheckState(MountContainerFrame)
 	CollectionsContainerSlotCheckState(PetContainerFrame)
-	CollectionsContainerSlotCheckState(TransmogContainerFrame)
+	CollectionsContainerSlotCheckState(SetContainerFrame)
 	CollectionsContainerSlotCheckState(ToyContainerFrame)
 end
 ]]
@@ -250,7 +250,7 @@ function CollectionsContainerFrameToggle(self)
 		index = 2
 	elseif self.tag == "Toy" then
 		index = 3
-	elseif self.tag == "Transmog" then
+	elseif self.tag == "Set" then
 		index = nil
 	end
 		
@@ -296,7 +296,7 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 		index = 1
 	elseif self.tag == "Pet" then 
 		index = 2
-	elseif self.tag == "Transmog" then
+	elseif self.tag == "Set" then
 		index = 4
 	elseif self.tag == "Toy" then
 		index = 3
