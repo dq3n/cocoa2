@@ -7,12 +7,13 @@
 ## SavedVariablesPerCharacter: CCB_CHAR_SAVE
 
 GlobalStrings.lua
-CCB_API.lua
 
 CollectionsItemButton.lua
 CollectionsItemButton.xml
 CollectionsContainerFrame.lua
 CollectionsContainerFrame.xml
+ActionBarContainerButton.lua
+ActionBarContainerButton.xml
 BagContainer.lua
 BagContainer.xml
 MountContainer.lua
@@ -23,9 +24,6 @@ PetContainer.lua
 PetContainer.xml
 QuickActions.lua
 QuickActions.xml
-ActionBarContainerButton.lua
-ActionBarContainerButton.xml
-
 
 
 # Credits 

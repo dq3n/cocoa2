@@ -132,83 +132,15 @@ MainMenuBarBackpackButton:SetScript("OnClick", BackpackSlotButton_OnClick)
 
 
 function CollectionsContainerSlotButton_UpdateBindings(self)
-
-	if self.tag == "Mount" then
-		self.binding = "TOGGLEBAG1"
-	elseif self.tag == "Pet" then
-		self.binding = "TOGGLEBAG2"
-	elseif self.tag == "Toy" then
-		self.binding = "TOGGLEBAG3"
-	elseif self.tag == "Set" then
-		self.binding = nil
-		self.binding = "TOGGLEBAG4"
-	elseif self.tag == "Bag" then
-		self.binding = "TOGGLEBACKPACK"
-	end
 	
-	if self.binding then
-		local binding = GetBindingKey(self.binding);
-	end
-	
+	local binding = GetBindingKey(self.binding);
 	local name = self:GetName();
 	
 	if binding and name then
 	SetOverrideBindingClick(self, true, binding, name, "RightButton");
 	end
-
-end
-
-
-function CollectionsContainerSlotButton_UpdateHandler(self)
-
-	if self.tag == "Mount" then
-		self:SetFrameRef("ContainerFrame", MountContainerFrame)
-	elseif self.tag == "Pet" then
-		self:SetFrameRef("ContainerFrame", PetContainerFrame)
-	elseif self.tag == "Toy" then
-		self:SetFrameRef("ContainerFrame", ToyContainerFrame)
-		self:SetFrameRef("ContainerFrame", ToyContainerFrame)
-		self:SetFrameRef("ContainerFrame", ToyContainerFrame)
-	elseif self.tag == "Set" then
-		self:SetFrameRef("ContainerFrame", SetContainerFrame)
-	elseif self.tag == "Bag" then
-		self:SetFrameRef("ContainerFrame", ContainerFrame1)
-	end
 	
-	self:SetAttribute("_onclick", [=[
-	  if self:GetFrameRef("ContainerFrame"):IsShown() then
-	 	 self:GetFrameRef("ContainerFrame"):Hide();
-	  elseif not(self:GetFrameRef("ContainerFrame"):IsShown()) then
-	 	 self:GetFrameRef("ContainerFrame"):Show();
-	  end
-	]=]);
-
-
-end
-
-
-
-function CollectionsContainerSlotButton_UpdateIcon(self)
-
-	local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
-
-	if self.tag == "Mount" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-	elseif self.tag == "Pet" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-	elseif self.tag == "Toy" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-	elseif self.tag == "Set" then
-		_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-		_G[self:GetName().."IconTexture"]:SetDesaturated(true)
-	elseif self.tag == "Bag" then
-		_G[self:GetName().."IconTexture"]:SetTexture("Interface\\Buttons\\Button-Backpack-Up")
-	end
-
+	
 end
 
 
@@ -362,7 +294,7 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 	
 	if self.tag == "Mount" then 
 		index = 1
-	elseif self.tag == "Pet" then
+	elseif self.tag == "Pet" then 
 		index = 2
 	elseif self.tag == "Set" then
 		index = 4

@@ -265,8 +265,8 @@ end
 
 function CollectionsContainerButton_PreClick(self, button, down)
 
-	local owner = self.owner
-	local kind = self.tag
+	local parent = self:GetParent()
+	local kind = parent.tag
 	local name = self:GetName()
 	local olditem = CCB_CHAR_SAVE[name];
 	local newitem = C_GetCursorIndex(kind)
@@ -316,8 +316,8 @@ function CollectionsContainerButton_PreClick(self, button, down)
 					local tempname = CCB_TEMPORARY_PICKUP:GetName()
 					CCB_TEMPORARY_PICKUP:SetScript("OnUpdate",CollectionsContainerButton_DelayAnimation)
 					CCB_CHAR_SAVE[tempname] = nil
-					if CCB_TEMPORARY_PICKUP.owner ~= self.owner then
-						CollectionsContainerFrame_Update(CCB_TEMPORARY_PICKUP.owner)
+					if CCB_TEMPORARY_PICKUP:GetParent() ~= self:GetParent() then
+						CollectionsContainerFrame_Update(CCB_TEMPORARY_PICKUP:GetParent())
 					end
 					
 					CCB_TEMPORARY_PICKUP = nil
@@ -336,9 +336,9 @@ function CollectionsContainerButton_PreClick(self, button, down)
 				CCB_CHAR_SAVE[tempname] = olditem
 				CCB_TEMPORARY_PICKUP:SetScript("OnUpdate",CollectionsContainerButton_DelayAnimation)
 					
-					if CCB_TEMPORARY_PICKUP.owner ~= self.owner then					
+					if CCB_TEMPORARY_PICKUP:GetParent() ~= self:GetParent() then					
 						CollectionsContainerButton_RemoveDuplicates(CCB_TEMPORARY_PICKUP)
-						CollectionsContainerFrame_Update(CCB_TEMPORARY_PICKUP.owner)
+						CollectionsContainerFrame_Update(CCB_TEMPORARY_PICKUP:GetParent())
 					end
 					
 				CCB_TEMPORARY_PICKUP = nil
@@ -351,6 +351,7 @@ function CollectionsContainerButton_PreClick(self, button, down)
 
 		end
 		CollectionsContainerButton_RemoveDuplicates(self)
+		--CollectionsContainerFrame_Update(self:GetParent())
 	
 	elseif button == "RightButton" then
 		C_UseItemByIndex(kind, olditem, self)
@@ -364,7 +365,7 @@ end
 
 function CollectionsContainerButton_RemoveDuplicates(self)
 
-	local frame = self.owner
+	local frame = self:GetParent()
 	local kind = frame.tag
 	local framename = frame:GetName()
 	local size = frame.size
@@ -456,9 +457,9 @@ end
 
 function CollectionsContainerButton_Update(self)
 
-	local kind = self.tag
+	local kind = self:GetParent().tag
 	local name = self:GetName()
-	local secure = self.owner.secure
+	local secure = self:GetParent().secure
 	
 	if secure and InCombatLockdown()then
 		return false
@@ -521,7 +522,7 @@ end
 
 function CollectionsContainerButton_BindingUpdate(self)
 
-	local kind = self.tag
+	local kind = self:GetParent().tag
 	local name = self:GetName()
 
 	if CCB_CHAR_SAVE[name] then
@@ -623,27 +624,6 @@ end
 
 function ContainerMicroButton_OnShow(self)
 
-	if self.loaded ~= true then
-		self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-		CCB_AssignTag(self)
-		CCB_AssignOwner(self)
-		local selfname = self:GetName()
-		local ownername = self.owner:GetName()
-		local texturestring = "Interface\\AddOns\\ccBags\\Textures\\"..string.sub(selfname, string.len(ownername)+1)
-		_G[self:GetName().."IconTexture"]:SetTexture(texturestring);
-		_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.8615, 0, 0.8615)
-		_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderUp");
-		_G[self:GetName().."NormalTexture"]:SetTexCoord(0, 0.906, 0, 0.906);
-		self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
-		self:RegisterEvent("PLAYER_REGEN_DISABLED");
-		self:RegisterEvent("PLAYER_REGEN_ENABLED");
-		self:RegisterEvent("TOYS_UPDATED");
-		self:RegisterEvent("COMPANION_UPDATE");
-		self.timer = 0
-		self.state = 0
-		self.loaded = true
-	end
-
 	_G[self:GetName().."_UpdateDisabled"](self)
 	
 	if self:GetName() == "PetContainerFrameTreatButton" and CCB_CHAR_SAVE["TreatTimer"] then
@@ -655,8 +635,8 @@ function ContainerMicroButton_OnShow(self)
 		end
 	end
 
-	if self.spellID then
-		local spellID = self.spellID
+	if self:GetAttribute("Spell") ~= nil then
+		local spellID = self:GetAttribute("Spell")
 		local startTime, duration, enable = GetSpellCooldown(spellID)
 		CooldownFrame_Set(self.Cooldown, startTime, duration, enable)
 	end

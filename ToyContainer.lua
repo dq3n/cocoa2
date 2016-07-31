@@ -165,7 +165,31 @@ function ToyContainerFrameDiceButton_UpdateDisabled(self)
 	if CCB_CHAR_SAVE["NUM_TOYS_ADDED"] >= 6 then
 		self.disabled = false
 	end
-		
+	
+	--[[ old code that checks how many toys are in the collection
+	
+	C_ToyBox.FilterToys();
+
+	--store the current filters so we can restore the ToyBox to the user's preferences after this operation
+	local filterCollected = C_ToyBox.GetFilterCollected();
+	local filterUncollected = C_ToyBox.GetFilterUncollected();
+
+	C_ToyBox.SetFilterCollected(true);
+	C_ToyBox.SetFilterUncollected(false);
+
+	local numToys = C_ToyBox.GetNumFilteredToys()
+	
+	if numToys > 9 then
+		self.disabled = false
+	else
+		self.disabled = true
+	end
+	
+	C_ToyBox.SetFilterCollected(filterCollected);
+	C_ToyBox.SetFilterUncollected(filterUncollected);
+	
+	ToyContainerFrameDiceButton_SetCooldown(self)]]
+	
 end
 
 

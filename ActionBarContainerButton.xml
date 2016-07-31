@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
-	<Button name="CollectionsContainerSlotButtonTemplate" inherits="ItemButtonTemplate, SecureHandlerClickTemplate" virtual="true">
+	<Button name="CollectionsContainerSlotButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
 		<Size x="30" y="30"/>
 		<Anchors>
 			<Anchor point="CENTER" relativeTo="$parent" relativePoint="CENTER">
@@ -126,17 +126,29 @@
 		</Layers>
 		<Scripts>
 			<OnShow>
-				CCB_AssignTag(self)
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-				CollectionsContainerSlotButton_UpdateIcon(self)
+				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
+				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
+				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
 				_G[self:GetName().."NormalTexture"]:SetWidth(50);
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
 				self.maxDisplayCount = 999;
 				self:RegisterEvent("UPDATE_BINDINGS")
 				CollectionsContainerSlotButton_UpdateBindings(self)
-				CollectionsContainerSlotButton_UpdateHandler(self)											
 			</OnShow>
+			<OnClick>
+				if InCombatLockdown() and self.secure == true then
+					UIErrorsFrame:AddMessage("Cannot access this container while you are in combat.", 1.0, 0.1, 0.1, 1.0);
+				else
+					if ( IsModifiedClick("OPENALLBAGS") ) then
+						CollectionsContainerFrameModifiedToggle(self, 1);
+					else
+						CollectionsContainerFrameToggle(self, 1)
+					end
+					CollectionsContainerSlotCheckState(self)
+				end
+			</OnClick>
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 				local line = self.tag.." Container"
@@ -144,7 +156,6 @@
 					line = "Coming Soon!"
 				end
 				GameTooltip:SetText(line, 1.0, 1.0, 1.0);
-				
 				local keyBinding = GetBindingKey(self.binding);
 				if ( keyBinding ) then
 					GameTooltip:AppendText(" "..NORMAL_FONT_COLOR_CODE.."("..keyBinding..")"..FONT_COLOR_CODE_CLOSE);
@@ -161,11 +172,68 @@
 		</Scripts>
 	</Button>
 
-	<Button name="MountContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag3Slot"/>
-	<Button name="PetContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag2Slot"/>
-	<Button name="ToyContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag1Slot"/>	
-	<Button name="SetContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag0Slot"/>	
+
+	<Button name="MountContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag3Slot">
+		<Scripts>
+			<OnLoad>
+				self.tag = "Mount"
+				self.binding = "TOGGLEBAG1"
+			</OnLoad>
+		</Scripts>
+	</Button>
+	
+	<Button name="PetContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag2Slot">
+		<Scripts>
+			<OnLoad>
+				self.secure = true
+				self.tag = "Pet"
+				self.binding = "TOGGLEBAG2"
+			</OnLoad>
+		</Scripts>
+	</Button>
+	
+	<Button name="ToyContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag1Slot">
+		<Scripts>
+			<OnLoad>
+				self.secure = true
+				self.tag = "Toy"
+				self.binding = "TOGGLEBAG3"
+			</OnLoad>
+		</Scripts>
+	</Button>
+
+	
+	
+	<Button name="SetContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="CharacterBag0Slot">
+		<Scripts>
+			<OnLoad>
+				self.tag = "Set"
+				self.binding = "TOGGLEBAG4"
+			</OnLoad>
+			<OnShow>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
+				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
+				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
+				_G[self:GetName().."IconTexture"]:SetDesaturated(true)
+				_G[self:GetName().."NormalTexture"]:SetWidth(50);
+				_G[self:GetName().."NormalTexture"]:SetHeight(50);
+				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
+				self.maxDisplayCount = 999;
+				CollectionsContainerSlotButton_UpdateBindings(self)
+			</OnShow>
+		</Scripts>
+	</Button>
+	
+	
 	<Button name="BagContainerSlotButton" inherits="CollectionsContainerSlotButtonTemplate" parent="MainMenuBarBackpackButton">
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="MainMenuBarBackpackButton" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
 		<Scripts>
 			<OnLoad>
 				self.secure = false

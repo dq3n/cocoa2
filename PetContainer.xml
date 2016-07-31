@@ -134,6 +134,10 @@
 				</Anchors>
 			</Button>
 			<Button name="$parentReviveButton" inherits="SecureActionButtonTemplate, ContainerMicroButtonTemplate" hidden="true">
+				<Attributes>
+					<Attribute name="type" value="spell" />
+					<Attribute name="spell" value="125439" />
+				</Attributes>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="PetContainerFrame" relativePoint="TOPLEFT">
 						<Offset>
@@ -141,10 +145,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Attributes>
-					<Attribute name="type" value="spell" />
-					<Attribute name="spell" value="125439" />
-				</Attributes>
 			</Button>
 			<Button name="$parentItem1" inherits="CollectionsContainerButtonTemplate">
 				<Anchors>
@@ -390,26 +390,5 @@
 		</Scripts>
 	</Frame>
 	<Frame name="ccBattlePetTooltip" inherits="ccBattlePetTooltipTemplate"/>
-	
-	<Button name="PetContainerSecureHandler" inherits="SecureHandlerEnterLeaveTemplate" parent="UIParent">
-		<Size x="200" y="200"/>
-			<Anchors>
-				<Anchor point="CENTER" relativeTo="UIParent" relativePoint="CENTER" x="0" y="0"/>
-			</Anchors>
-		<Scripts>
-			<OnShow>
-				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-				self:SetFrameRef("Revive", PetContainerFrameReviveButton)
-				
-				self:SetAttribute("_onenter", [=[ --
-				  self:GetFrameRef("Revive"):Show();
-				]=]);
-
-				self:SetAttribute("_onleave", [=[ --
-				  self:GetFrameRef("Revive"):Hide();
-				]=]);
-			</OnShow>
-		</Scripts>
-	</Button>
 
 </Ui>

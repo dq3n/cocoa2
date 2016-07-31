@@ -33,6 +33,8 @@ function CCB_AssignOwner(self)
 			self.owner = _G["ToyContainerCardFrame"]
 		elseif prefixlength == 18 then
 			self.owner = _G["ToyContainerBoardFrame"]
+		else
+			self.owner = _G["ToyContainerFrame"]
 		end
 	elseif tag == "Set" then
 		self.owner = _G["SetContainerFrame"]

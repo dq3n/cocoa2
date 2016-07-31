@@ -160,21 +160,20 @@
 				CollectionsContainerButton_PreClick(self, button, down)
 			</PreClick>
 			<OnEnter>
-				_G[self.tag.."ContainerButton_UpdateTooltip"](self)
+				_G[self:GetParent().tag.."ContainerButton_UpdateTooltip"](self)
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
 				self.showingTooltip = false;
 			</OnLeave>
 			<OnLoad>
-				CCB_AssignTag(self)
-				CCB_AssignOwner(self)
 				SetItemButtonNormalTextureVertexColor(self, 0.85, 0.85, 0.85)
 				_G[self:GetName().."NormalTexture"]:SetAlpha(0.85)
 				self:SetHitRectInsets(-2, -2, -2, -2)
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				self:RegisterForDrag("LeftButton");
 				self.Cooldown:SetDrawEdge(false)
+				
 				self.slot = tonumber(self:GetName():reverse():sub(1,1))
 			</OnLoad>
 			<OnEvent>
@@ -299,6 +298,25 @@
 		</PushedTexture>
 		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				local selfname = self:GetName()
+				local parent = self:GetParent()
+				local parentname = parent:GetName()
+				local framename = string.sub(selfname, string.len(parentname)+1)
+				local texturestring = "Interface\\AddOns\\ccBags\\Textures\\"..framename
+				_G[self:GetName().."IconTexture"]:SetTexture(texturestring);
+				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.8615, 0, 0.8615)
+				_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderUp");
+				_G[self:GetName().."NormalTexture"]:SetTexCoord(0, 0.906, 0, 0.906);
+				self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+				self:RegisterEvent("PLAYER_REGEN_DISABLED");
+				self:RegisterEvent("PLAYER_REGEN_ENABLED");
+				self:RegisterEvent("TOYS_UPDATED");
+				self:RegisterEvent("COMPANION_UPDATE");
+				self.timer = 0
+				self.state = 0
+			</OnLoad>
 			<OnEvent>
 				ContainerMicroButton_OnEvent(self, event, ...)
 			</OnEvent>
