@@ -11,6 +11,71 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
+			<Frame name="$parentBadge" parentKey="Badge" framestrata="HIGH" hidden="true">
+				<Size>
+					<AbsDimension x="25" y="25"/>
+				</Size>
+				<Layers>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<Texture parentKey="Texture" file="Interface\AddOns\ccBags\Textures\Notification_Badge">
+							<Size>
+								<AbsDimension x="24" y="24"/>
+							</Size>
+							<Anchors>
+								<Anchor point="CENTER" relativeTo="$parent" relativePoint="CENTER" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="2">
+						<FontString name="$parentString" parentKey="String" inherits="WhiteNormalNumberFont">
+							<Anchors>
+								<Anchor point="CENTER" relativeTo="$parent" relativePoint="CENTER" x="1" y="0"/>
+							</Anchors>
+							  <Shadow>
+								<Offset x="1" y="-1" />
+								<Color r="0" g="0" b="0"/>
+							  </Shadow>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Anchors>
+					<Anchor point="CENTER" relativeTo="$parent" relativePoint="TOPRIGHT" x="-4" y="-4"/>
+				</Anchors>
+				<Animations>
+					<AnimationGroup parentKey="Enter">
+						<Translation offsetX="0" offsetY="-7" duration="0.05" order="1"/>
+						<Alpha FromAlpha="0" ToAlpha="1" duration="0.6" order="2"/>
+						<Translation offsetX="0" offsetY="7" duration="0.25" order="2"/>
+						<Scripts>
+							<OnPlay>
+								self:GetParent():SetAlpha(0)
+								self:GetParent():Show()
+							</OnPlay>
+							<OnFinished>
+								self:GetParent():SetAlpha(1)
+							</OnFinished>
+						</Scripts>
+					</AnimationGroup>
+					<AnimationGroup parentKey="Exit">
+						<Alpha FromAlpha="1" ToAlpha="0" duration="0.2" order="1"/>
+						<Translation offsetX="0" offsetY="-2" duration="0.2" order="1"/>
+						<Scripts>
+							<OnPlay>
+								self:GetParent():SetAlpha(1)
+							</OnPlay>
+							<OnFinished>
+								self:GetParent():Hide()
+							</OnFinished>
+						</Scripts>
+					</AnimationGroup>
+				</Animations>
+				<Scripts>
+					<OnShow>
+						self.String:SetText("9")
+					</OnShow>
+				</Scripts>
+			</Frame>
+		
 			<Frame name="$parentQuickAction" parentKey="QuickAction" framestrata="HIGH" hidden="true">
 				<Size>
 					<AbsDimension x="29" y="29"/>
@@ -129,7 +194,6 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
 				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
 				_G[self:GetName().."NormalTexture"]:SetWidth(50);
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
@@ -151,7 +215,7 @@
 			</OnClick>
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_LEFT");
-				local line = self.tag.." Container"
+				local line = _G["CCBAG_NAME_"..self.tag:upper()]
 				if self.tag == "Set" then 
 					line = "Coming Soon!"
 				end
@@ -214,8 +278,7 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
 				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
-				_G[self:GetName().."IconTexture"]:SetDesaturated(true)
+				--_G[self:GetName().."IconTexture"]:SetDesaturated(true)
 				_G[self:GetName().."NormalTexture"]:SetWidth(50);
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);

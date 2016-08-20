@@ -379,13 +379,10 @@
 					if duration > 0 then
 						return
 					else
-						CooldownFrame_SetTimer(button.Cooldown,GetTime(),9,1)
+						CooldownFrame_Set(button.Cooldown,GetTime(),9,1)
 					end
 					button.check:Hide()
-						
-					CollectionsContainerSlotCheckState(self)
-					
-					
+											
 					ContainerFrame1.bagsShown = ContainerFrame1.bagsShown - 1;
 					-- Remove the closed bag from the list and collapse the rest of the entries
 					local index = 1;

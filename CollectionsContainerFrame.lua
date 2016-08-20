@@ -83,7 +83,7 @@ function CollectionsContainerFrame_OnShow(self)
 	if not self.loaded then
 
 		local kind = self.tag
-		local name = self.tag.."s"
+		local name = _G["CCBAG_NAME_"..self.tag:upper()]
 		local x, y = self:GetSize()
 		_G[self:GetName().."Name"]:SetSize(x,12)
 		_G[self:GetName().."Name"]:SetText(name)
@@ -91,7 +91,6 @@ function CollectionsContainerFrame_OnShow(self)
 	
 		local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..kind.."_Container_Icon"
 		self.Portrait:SetTexture(texturepath)
-		self.Portrait:SetTexCoord(0, 0.875, 0, 0.875)
 		texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..kind.."_Container_Frame"
 		self.Background:SetTexture(texturepath)
 		
