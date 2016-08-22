@@ -51,7 +51,7 @@ BINDING_NAME_USETOY6 = CCBAG_NAME_TOY.." Slot 6";
 
 BADGE_NOTIFICATION_TEXT_BAG1 = "Your backpack is full."
 BADGE_NOTIFICATION_TEXT_BAG2 = "Your backpack is almost full."
-BADGE_NOTIFICATION_TEXT_BAG3 = "Visit a Banker or Vendor to free up some space."
+BADGE_NOTIFICATION_TEXT_BAG3 = "Visit a Bank or Vendor to free up bag space."
 BADGE_NOTIFICATION_TEXT_MOUNT1 = "No slots are currently bound."
 BADGE_NOTIFICATION_TEXT_MOUNT2 = "Go to the Game Menu > Key Bindings > "..BINDING_HEADER_CCBAGS.." to assign hotkeys for mounts in this container."
 
