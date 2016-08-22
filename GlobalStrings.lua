@@ -4,7 +4,6 @@ CCBAG_NAME_PET = "iPet"
 CCBAG_NAME_TOY = "Toypal"
 CCBAG_NAME_SET = "Sticker Book"
 
-
 BINDING_NAME_TOGGLEBACKPACK = "Toggle "..CCBAG_NAME_BAG;
 BINDING_NAME_TOGGLEBAG1 = "Toggle "..CCBAG_NAME_MOUNT;
 BINDING_NAME_TOGGLEBAG2 = "Toggle "..CCBAG_NAME_PET;
@@ -48,4 +47,13 @@ BINDING_NAME_USETOY3 = CCBAG_NAME_TOY.." Slot 3";
 BINDING_NAME_USETOY4 = CCBAG_NAME_TOY.." Slot 4";
 BINDING_NAME_USETOY5 = CCBAG_NAME_TOY.." Slot 5";
 BINDING_NAME_USETOY6 = CCBAG_NAME_TOY.." Slot 6";
+
+
+BADGE_NOTIFICATION_TEXT_BAG1 = "Your backpack is full."
+BADGE_NOTIFICATION_TEXT_BAG2 = "Your backpack is almost full."
+BADGE_NOTIFICATION_TEXT_BAG3 = "Visit a Banker or Vendor to free up some space."
+BADGE_NOTIFICATION_TEXT_MOUNT1 = "No slots are currently bound."
+BADGE_NOTIFICATION_TEXT_MOUNT2 = "Go to the Game Menu > Key Bindings > "..BINDING_HEADER_CCBAGS.." to assign hotkeys for mounts in this container."
+
+
 

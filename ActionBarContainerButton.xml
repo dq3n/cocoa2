@@ -13,7 +13,7 @@
 		<Frames>
 			<Frame name="$parentBadge" parentKey="Badge" framestrata="HIGH" hidden="true">
 				<Size>
-					<AbsDimension x="25" y="25"/>
+					<AbsDimension x="24" y="24"/>
 				</Size>
 				<Layers>
 					<Layer level="OVERLAY" textureSubLevel="1">
@@ -58,7 +58,6 @@
 					</AnimationGroup>
 					<AnimationGroup parentKey="Exit">
 						<Alpha FromAlpha="1" ToAlpha="0" duration="0.2" order="1"/>
-						<Translation offsetX="0" offsetY="-2" duration="0.2" order="1"/>
 						<Scripts>
 							<OnPlay>
 								self:GetParent():SetAlpha(1)
@@ -69,11 +68,6 @@
 						</Scripts>
 					</AnimationGroup>
 				</Animations>
-				<Scripts>
-					<OnShow>
-						self.String:SetText("9")
-					</OnShow>
-				</Scripts>
 			</Frame>
 		
 			<Frame name="$parentQuickAction" parentKey="QuickAction" framestrata="HIGH" hidden="true">
@@ -198,7 +192,6 @@
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
 				self.maxDisplayCount = 999;
-				self:RegisterEvent("UPDATE_BINDINGS")
 				CollectionsContainerSlotButton_UpdateBindings(self)
 			</OnShow>
 			<OnClick>
@@ -224,6 +217,12 @@
 				if ( keyBinding ) then
 					GameTooltip:AppendText(" "..NORMAL_FONT_COLOR_CODE.."("..keyBinding..")"..FONT_COLOR_CODE_CLOSE);
 				end
+				
+				if self.tag == "Mount" and self.Badge.String:GetText() == "i" and self.Badge:IsShown() then
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_MOUNT1, 1, nil, nil, true);		
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_MOUNT2, nil, nil, nil, true);		
+				end
+				
 				GameTooltip:Show();
 			</OnEnter>
 			<OnLeave>
@@ -242,7 +241,26 @@
 			<OnLoad>
 				self.tag = "Mount"
 				self.binding = "TOGGLEBAG1"
+				self:RegisterEvent("UPDATE_BINDINGS")
+				self:RegisterEvent("VARIABLES_LOADED")
 			</OnLoad>
+			<OnEvent>
+				if ( event == "VARIABLES_LOADED" or event == "UPDATE_BINDINGS" ) then
+					local count = 0
+					for i = 1, 4 do
+						if GetBindingKey("USEMOUNT"..i) ~= nil then
+							count = count + 1
+						end
+					end
+
+					if count == 0 then
+						self.Badge.String:SetText("i")
+						ContainerSlotButtonBadge_AnimationController(self.Badge,1)
+					else
+						ContainerSlotButtonBadge_AnimationController(self.Badge,0)
+					end
+				end
+			</OnEvent>
 		</Scripts>
 	</Button>
 	
@@ -302,6 +320,9 @@
 				self.secure = false
 				self.tag = "Bag"
 				self.binding = "TOGGLEBACKPACK"
+				self:RegisterEvent("UPDATE_BINDINGS")
+				self:RegisterEvent("BAG_UPDATE_DELAYED")
+
 			</OnLoad>
 			<OnShow>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
@@ -310,7 +331,6 @@
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
 				self.maxDisplayCount = 999;
-				self:RegisterEvent("UPDATE_BINDINGS")
 				CollectionsContainerSlotButton_UpdateBindings(self)
 			</OnShow>
 			<OnClick>
@@ -325,6 +345,17 @@
 				if ( keyBinding ) then
 					GameTooltip:AppendText(" "..NORMAL_FONT_COLOR_CODE.."("..keyBinding..")"..FONT_COLOR_CODE_CLOSE);
 				end
+				
+				if self.Badge.String:GetText() == "0" and self.Badge:IsShown() then
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG1, 1, nil, nil, true);
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG3, nil, nil, nil, true);				
+				elseif self.Badge:IsShown() then
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG2, 1, nil, nil, true);
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG3, nil, nil, nil, true);		
+				end
+
+				
+				
 				GameTooltip:Show();
 			</OnEnter>
 			<OnLeave>
@@ -332,8 +363,14 @@
 				ResetCursor();
 			</OnLeave>
 			<OnEvent>
+				if event == "UPDATE_BINDINGS" then
 				CollectionsContainerSlotButton_UpdateBindings(self)
 				CollectionsContainerSlotCheckState(self)
+				end
+				
+				if event == "BAG_UPDATE_DELAYED" then
+					BagContainerSlotButton_UpdateFreeSlots()
+				end
 			</OnEvent>
 		</Scripts>
 	</Button>
