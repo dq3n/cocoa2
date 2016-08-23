@@ -57,3 +57,7 @@ BADGE_NOTIFICATION_TEXT_MOUNT2 = "Go to the Game Menu > Key Bindings > "..BINDIN
 
 
 
+
+UNEQUIPPED_CONTAINER_SLOT = "Empty Container Slot"
+
+

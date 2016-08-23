@@ -296,7 +296,7 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
 				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-				--_G[self:GetName().."IconTexture"]:SetDesaturated(true)
+				_G[self:GetName().."IconTexture"]:SetDesaturated(true)
 				_G[self:GetName().."NormalTexture"]:SetWidth(50);
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
