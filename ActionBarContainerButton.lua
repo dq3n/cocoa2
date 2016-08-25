@@ -14,27 +14,41 @@ SetDesaturation(CharacterBag3SlotIconTexture, true);
 Disable_BagButtons = function()
 	BagContainerSlotButton:Disable();
 	SetDesaturation(BagContainerSlotButtonIconTexture, true);
+	SetDesaturation(BagContainerSlotButtonBadge.Texture, true);
+
 	MountContainerSlotButton:Disable();
 	SetDesaturation(MountContainerSlotButtonIconTexture, true);
+	SetDesaturation(MountContainerSlotButtonBadge.Texture, true);
+
 	PetContainerSlotButton:Disable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, true);
+	SetDesaturation(PetContainerSlotButtonBadge.Texture, true);
+
 	SetContainerSlotButton:Disable();
 	--SetDesaturation(SetContainerSlotButtonIconTexture, true);
+	--SetDesaturation(SetContainerSlotButtonBadge.Texture, true);
+
 	ToyContainerSlotButton:Disable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, true);
+	SetDesaturation(ToyContainerSlotButtonBadge.Texture, true);
 end
 
 Enable_BagButtons = function()
 	BagContainerSlotButton:Enable();
 	SetDesaturation(BagContainerSlotButtonIconTexture, false);
+	SetDesaturation(BagContainerSlotButtonBadge.Texture, false);
 	MountContainerSlotButton:Enable();
 	SetDesaturation(MountContainerSlotButtonIconTexture, false);
+	SetDesaturation(MountContainerSlotButtonBadge.Texture, false);
 	PetContainerSlotButton:Enable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, false);
+	SetDesaturation(PetContainerSlotButtonBadge.Texture, false);
 	SetContainerSlotButton:Enable();
 	--SetDesaturation(SetContainerSlotButtonIconTexture, false);
+	--SetDesaturation(SetContainerSlotButtonBadge.Texture, false);
 	ToyContainerSlotButton:Enable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, false);
+	SetDesaturation(ToyContainerSlotButtonBadge.Texture, false);
 end
 
 
