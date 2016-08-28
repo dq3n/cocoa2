@@ -56,16 +56,13 @@
 				self.UpdateTooltip = ccBagSlotButton_OnEnter;
 				_G[self:GetName().."NormalTexture"]:SetWidth(26);
 				_G[self:GetName().."NormalTexture"]:SetHeight(26);
-				_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderNormal");
 				_G[self:GetName().."NormalTexture"]:SetTexCoord(0, 0.906, 0, 0.906);
 				self.IconBorder:SetSize(30, 30);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
 				self.maxDisplayCount = 999;
 				self:RegisterForDrag("LeftButton");
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-				
 				ccContainerFrameFilterDropDown_OnLoad()
-				
 			</OnLoad>
 			<OnEvent>
 				ccItemAnim_OnEvent(self, event, ...);

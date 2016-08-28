@@ -1,4 +1,4 @@
-local origContainerFrame_OnShow = ContainerFrame_OnEvent
+local origContainerFrame_OnEvent = ContainerFrame_OnEvent
 
 ContainerFrame_OnEvent = function(self, event, ...)
 	local arg1, arg2 = ...;
@@ -71,8 +71,12 @@ ContainerFrame_OnShow = function(...)
 	self:RegisterEvent("BAG_SLOT_FLAGS_UPDATED");
 	self:RegisterEvent("ACTIONBAR_SHOWGRID")
 	self:RegisterEvent("ACTIONBAR_HIDEGRID")
-
-
+	
+	if self.PortraitButton.loaded ~= true then
+		self.PortraitButton:SetScript("OnEnter",ContainerFramePortraitButton_OnEnter)
+		self.PortraitButton.loaded = true
+	end
+	
 	self.FilterIcon:Hide();
 	if ( self:GetID() == 0 ) then
 		local shouldShow = true;
@@ -511,6 +515,7 @@ function ccPaperDollItemSlotButton_Update(self)
 	local name = strsub(name,3)
 	local cooldown = _G[name.."Cooldown"];
 	if ( textureName ) then
+		_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderUp");
 		SetItemButtonTexture(self, textureName);
 		SetItemButtonCount(self, GetInventoryItemCount("player", self:GetID()));
 		if ( GetInventoryItemBroken("player", self:GetID()) 
@@ -527,6 +532,7 @@ function ccPaperDollItemSlotButton_Update(self)
 		end
 		self.hasItem = 1;
 	else
+		_G[self:GetName().."NormalTexture"]:SetTexture("Interface\\AddOns\\ccBags\\Textures\\BorderNormal")
 		local textureName = self.backgroundTextureName;
 		if ( self.checkRelic and UnitHasRelicSlot("player") ) then
 			textureName = "Interface\\Paperdoll\\UI-PaperDoll-Slot-Relic.blp";
@@ -653,7 +659,7 @@ function ccBagSlotButton_OnEnter(self)
 		end
 		GameTooltip:Show();
 	else
-		GameTooltip:SetText(EQUIP_CONTAINER, 1.0, 1.0, 1.0);
+		GameTooltip:SetText(UNEQUIPPED_CONTAINER_SLOT, 1.0, 1.0, 1.0);
 	end
 end
 
@@ -663,7 +669,54 @@ end
 
 
 
+local origContainerFramePortraitButton_OnEnter = ContainerFramePortraitButton_OnEnter
 
+ContainerFramePortraitButton_OnEnter = function(...)
+	local self = ...
+	self.Highlight:Show();
+	GameTooltip:SetOwner(self, "ANCHOR_LEFT");
+	local waitingOnData = false;
+	if ( self:GetID() == 0 ) then
+		GameTooltip:SetText(BACKPACK_TOOLTIP, 1.0, 1.0, 1.0);
+		if (GetBindingKey("TOGGLEBACKPACK")) then
+			GameTooltip:AppendText(" "..NORMAL_FONT_COLOR_CODE.."("..GetBindingKey("TOGGLEBACKPACK")..")"..FONT_COLOR_CODE_CLOSE)
+		end
+	else
+		local parent = self:GetParent();
+		local id = parent:GetID();
+		local link = GetInventoryItemLink("player", ContainerIDToInventoryID(id));
+		local name, _, quality = GetItemInfo(link);
+		if name and quality then
+			local r, g, b = GetItemQualityColor(quality);
+			GameTooltip:SetText(name, r, g, b);
+		else
+			GameTooltip:SetText(RETRIEVING_ITEM_INFO, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b);
+			waitingOnData = true;
+		end
+
+		if (not IsInventoryItemProfessionBag("player", ContainerIDToInventoryID(id))) then
+			if (parent.localFlag and BAG_FILTER_LABELS[parent.localFlag]) then
+				GameTooltip:AddLine(BAG_FILTER_ASSIGNED_TO:format(BAG_FILTER_LABELS[parent.localFlag]));
+			elseif (not parent.localFlag) then
+				for i = LE_BAG_FILTER_FLAG_EQUIPMENT, NUM_LE_BAG_FILTER_FLAGS do
+					local active = false;
+					if ( self:GetID() > NUM_BAG_SLOTS ) then
+						active = GetBankBagSlotFlag(id - NUM_BAG_SLOTS, i);
+					else
+						active = GetBagSlotFlag(id, i);
+					end
+					if ( active ) then
+						GameTooltip:AddLine(BAG_FILTER_ASSIGNED_TO:format(BAG_FILTER_LABELS[i]));
+						break;
+					end
+				end
+			end
+		end
+	end
+	GameTooltip:AddLine(CLICK_BAG_SETTINGS);
+	self.UpdateTooltip = waitingOnData and ContainerFramePortraitButton_OnEnter or nil;
+	GameTooltip:Show();
+end
 
 
 -- Filter Functions

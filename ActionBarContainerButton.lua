@@ -14,27 +14,41 @@ SetDesaturation(CharacterBag3SlotIconTexture, true);
 Disable_BagButtons = function()
 	BagContainerSlotButton:Disable();
 	SetDesaturation(BagContainerSlotButtonIconTexture, true);
+	SetDesaturation(BagContainerSlotButtonBadge.Texture, true);
+
 	MountContainerSlotButton:Disable();
 	SetDesaturation(MountContainerSlotButtonIconTexture, true);
+	SetDesaturation(MountContainerSlotButtonBadge.Texture, true);
+
 	PetContainerSlotButton:Disable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, true);
+	SetDesaturation(PetContainerSlotButtonBadge.Texture, true);
+
 	SetContainerSlotButton:Disable();
 	--SetDesaturation(SetContainerSlotButtonIconTexture, true);
+	--SetDesaturation(SetContainerSlotButtonBadge.Texture, true);
+
 	ToyContainerSlotButton:Disable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, true);
+	SetDesaturation(ToyContainerSlotButtonBadge.Texture, true);
 end
 
 Enable_BagButtons = function()
 	BagContainerSlotButton:Enable();
 	SetDesaturation(BagContainerSlotButtonIconTexture, false);
+	SetDesaturation(BagContainerSlotButtonBadge.Texture, false);
 	MountContainerSlotButton:Enable();
 	SetDesaturation(MountContainerSlotButtonIconTexture, false);
+	SetDesaturation(MountContainerSlotButtonBadge.Texture, false);
 	PetContainerSlotButton:Enable();
 	SetDesaturation(PetContainerSlotButtonIconTexture, false);
+	SetDesaturation(PetContainerSlotButtonBadge.Texture, false);
 	SetContainerSlotButton:Enable();
 	--SetDesaturation(SetContainerSlotButtonIconTexture, false);
+	--SetDesaturation(SetContainerSlotButtonBadge.Texture, false);
 	ToyContainerSlotButton:Enable();
 	SetDesaturation(ToyContainerSlotButtonIconTexture, false);
+	SetDesaturation(ToyContainerSlotButtonBadge.Texture, false);
 end
 
 
@@ -320,3 +334,56 @@ function CollectionsContainerFrameModifiedToggle(self, index)
 	end
 	CollectionsContainerSlotCheckState(frame)
 end
+
+
+
+function BagContainerSlotButton_UpdateFreeSlots()
+	
+	local self = BagContainerSlotButton
+	local numofSlots, totalSlots, totalFree, freeSlots, bagFamily = 0;
+	totalFree = 0
+	totalSlots = 0
+	
+	for i = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+		freeSlots, bagFamily = GetContainerNumFreeSlots(i);
+		if ( bagFamily == 0 ) then
+			numofSlots = GetContainerNumSlots(i);
+			totalSlots = totalSlots + numofSlots;
+			totalFree = totalFree + freeSlots;
+		end
+	end
+
+	local threshold = math.floor(totalSlots * 0.15)
+	if threshold < 3 then
+		threshold = 3
+	elseif threshold > 9 then
+		threshold = 9
+	end
+		
+	if ( totalFree < threshold) then
+		self.Badge.String:SetText(totalFree)
+		ContainerSlotButtonBadge_AnimationController(self.Badge,1)
+	else
+		ContainerSlotButtonBadge_AnimationController(self.Badge,0)
+	end
+
+	
+end
+
+
+
+function ContainerSlotButtonBadge_AnimationController(self,state)
+
+	if state == 1 then
+		if not self:IsShown() then
+			self.Enter:Play()
+		end
+	elseif state == 0 then
+		if self:IsShown() then
+			self.Exit:Play()
+		end
+	end
+
+end
+
+

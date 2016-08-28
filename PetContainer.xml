@@ -54,7 +54,6 @@
 				self.Cooldown:SetDrawEdge(false)
 				self.check:SetTexture(nil)
 				self.slot = tonumber(self:GetName():reverse():sub(1,1))
-				self:RegisterEvent("COMPANION_UPDATE")
 				self.HotKey:Hide()
 			</OnLoad>
 			<OnEvent>

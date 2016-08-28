@@ -11,6 +11,65 @@
 			</Anchor>
 		</Anchors>
 		<Frames>
+			<Frame name="$parentBadge" parentKey="Badge" framestrata="HIGH" hidden="true">
+				<Size>
+					<AbsDimension x="24" y="24"/>
+				</Size>
+				<Layers>
+					<Layer level="OVERLAY" textureSubLevel="1">
+						<Texture parentKey="Texture" file="Interface\AddOns\ccBags\Textures\Notification_Badge">
+							<Size>
+								<AbsDimension x="24" y="24"/>
+							</Size>
+							<Anchors>
+								<Anchor point="CENTER" relativeTo="$parent" relativePoint="CENTER" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="2">
+						<FontString name="$parentString" parentKey="String" inherits="WhiteNormalNumberFont">
+							<Anchors>
+								<Anchor point="CENTER" relativeTo="$parent" relativePoint="CENTER" x="1" y="0"/>
+							</Anchors>
+							  <Shadow>
+								<Offset x="1" y="-1" />
+								<Color r="0" g="0" b="0"/>
+							  </Shadow>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Anchors>
+					<Anchor point="CENTER" relativeTo="$parent" relativePoint="TOPRIGHT" x="-4" y="-4"/>
+				</Anchors>
+				<Animations>
+					<AnimationGroup parentKey="Enter">
+						<Translation offsetX="0" offsetY="-7" duration="0.05" order="1"/>
+						<Alpha FromAlpha="0" ToAlpha="1" duration="0.6" order="2"/>
+						<Translation offsetX="0" offsetY="7" duration="0.25" order="2"/>
+						<Scripts>
+							<OnPlay>
+								self:GetParent():SetAlpha(0)
+								self:GetParent():Show()
+							</OnPlay>
+							<OnFinished>
+								self:GetParent():SetAlpha(1)
+							</OnFinished>
+						</Scripts>
+					</AnimationGroup>
+					<AnimationGroup parentKey="Exit">
+						<Alpha FromAlpha="1" ToAlpha="0" duration="0.2" order="1"/>
+						<Scripts>
+							<OnPlay>
+								self:GetParent():SetAlpha(1)
+							</OnPlay>
+							<OnFinished>
+								self:GetParent():Hide()
+							</OnFinished>
+						</Scripts>
+					</AnimationGroup>
+				</Animations>
+			</Frame>
+		
 			<Frame name="$parentQuickAction" parentKey="QuickAction" framestrata="HIGH" hidden="true">
 				<Size>
 					<AbsDimension x="29" y="29"/>
@@ -129,12 +188,10 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
 				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
 				_G[self:GetName().."NormalTexture"]:SetWidth(50);
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
 				self.maxDisplayCount = 999;
-				self:RegisterEvent("UPDATE_BINDINGS")
 				CollectionsContainerSlotButton_UpdateBindings(self)
 			</OnShow>
 			<OnClick>
@@ -151,7 +208,7 @@
 			</OnClick>
 			<OnEnter>
 				GameTooltip:SetOwner(self, "ANCHOR_LEFT");
-				local line = self.tag.." Container"
+				local line = _G["CCBAG_NAME_"..self.tag:upper()]
 				if self.tag == "Set" then 
 					line = "Coming Soon!"
 				end
@@ -160,6 +217,12 @@
 				if ( keyBinding ) then
 					GameTooltip:AppendText(" "..NORMAL_FONT_COLOR_CODE.."("..keyBinding..")"..FONT_COLOR_CODE_CLOSE);
 				end
+				
+				if self.tag == "Mount" and self.Badge.String:GetText() == "i" and self.Badge:IsShown() then
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_MOUNT1, 1, nil, nil, true);		
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_MOUNT2, nil, nil, nil, true);		
+				end
+				
 				GameTooltip:Show();
 			</OnEnter>
 			<OnLeave>
@@ -178,7 +241,26 @@
 			<OnLoad>
 				self.tag = "Mount"
 				self.binding = "TOGGLEBAG1"
+				self:RegisterEvent("UPDATE_BINDINGS")
+				self:RegisterEvent("VARIABLES_LOADED")
 			</OnLoad>
+			<OnEvent>
+				if ( event == "VARIABLES_LOADED" or event == "UPDATE_BINDINGS" ) then
+					local count = 0
+					for i = 1, 4 do
+						if GetBindingKey("USEMOUNT"..i) ~= nil then
+							count = count + 1
+						end
+					end
+
+					if count == 0 then
+						self.Badge.String:SetText("i")
+						ContainerSlotButtonBadge_AnimationController(self.Badge,1)
+					else
+						ContainerSlotButtonBadge_AnimationController(self.Badge,0)
+					end
+				end
+			</OnEvent>
 		</Scripts>
 	</Button>
 	
@@ -214,7 +296,6 @@
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				local texturepath = "Interface\\AddOns\\ccBags\\Textures\\"..self.tag.."_Container_Icon"
 				_G[self:GetName().."IconTexture"]:SetTexture(texturepath)
-				_G[self:GetName().."IconTexture"]:SetTexCoord(0, 0.875, 0, 0.875)
 				_G[self:GetName().."IconTexture"]:SetDesaturated(true)
 				_G[self:GetName().."NormalTexture"]:SetWidth(50);
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
@@ -239,6 +320,9 @@
 				self.secure = false
 				self.tag = "Bag"
 				self.binding = "TOGGLEBACKPACK"
+				self:RegisterEvent("UPDATE_BINDINGS")
+				self:RegisterEvent("BAG_UPDATE_DELAYED")
+
 			</OnLoad>
 			<OnShow>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
@@ -247,7 +331,6 @@
 				_G[self:GetName().."NormalTexture"]:SetHeight(50);
 				_G[self:GetName().."Count"]:SetPoint("BOTTOMRIGHT", -2, 2);
 				self.maxDisplayCount = 999;
-				self:RegisterEvent("UPDATE_BINDINGS")
 				CollectionsContainerSlotButton_UpdateBindings(self)
 			</OnShow>
 			<OnClick>
@@ -262,6 +345,17 @@
 				if ( keyBinding ) then
 					GameTooltip:AppendText(" "..NORMAL_FONT_COLOR_CODE.."("..keyBinding..")"..FONT_COLOR_CODE_CLOSE);
 				end
+				
+				if self.Badge.String:GetText() == "0" and self.Badge:IsShown() then
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG1, 1, nil, nil, true);
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG3, nil, nil, nil, true);				
+				elseif self.Badge:IsShown() then
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG2, 1, nil, nil, true);
+					GameTooltip:AddLine(BADGE_NOTIFICATION_TEXT_BAG3, nil, nil, nil, true);		
+				end
+
+				
+				
 				GameTooltip:Show();
 			</OnEnter>
 			<OnLeave>
@@ -269,8 +363,14 @@
 				ResetCursor();
 			</OnLeave>
 			<OnEvent>
+				if event == "UPDATE_BINDINGS" then
 				CollectionsContainerSlotButton_UpdateBindings(self)
 				CollectionsContainerSlotCheckState(self)
+				end
+				
+				if event == "BAG_UPDATE_DELAYED" then
+					BagContainerSlotButton_UpdateFreeSlots()
+				end
 			</OnEvent>
 		</Scripts>
 	</Button>
